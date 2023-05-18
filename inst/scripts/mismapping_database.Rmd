@@ -1,0 +1,168 @@
+---
+title: "Identify mismapping sites"
+author: "kr"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(rtracklayer)
+library(GenomicFeatures)
+library(Biostrings)
+
+generateSimulatedReads <- function(fasta_fn, gtf_fn, output_fasta,
+                                   read_length = 150,
+                                   window = 25, 
+                                   min_read_length = read_length * 0.25,
+                                   n_chunks = 20){
+    fa <- FaFile(fasta_fn)
+    txdb <- makeTxDbFromGFF(gtf_fn)
+    
+    if(file.exists(output_fasta)) unlink(output_fasta)
+    compress_output <- endsWith(output_fasta, ".gz")
+
+    tx <- exonsBy(txdb, by = "tx", use.names = TRUE)
+    tx_seqs <- extractTranscriptSeqs(fa, tx)
+    
+    idx <- seq_along(tx_seqs)
+    chunks <- split(idx, sort(rep_len(1:n_chunks, length(idx))))
+    
+    for(i in seq_along(chunks)){
+        message("working on chunk for tx reads: ", i , " of ", n_chunks)
+        chunk <- chunks[[i]]
+        tx_seq <- tx_seqs[chunk]
+        tx_windows <- slidingWindows(IRanges(1, nchar(tx_seq)), read_length, window)
+        names(tx_windows) <- names(tx_seq)
+        tx_windows <- tx_windows[width(tx_windows) >= min_read_length]
+        
+        read_ids <- as.character(unlist(tx_windows))
+        read_ids <- paste0(names(read_ids), ":", read_ids, ":+")
+        
+        names(tx_windows) <- NULL
+        tx_window_seqs <- unlist(extractAt(tx_seq, tx_windows), 
+                                 use.names = FALSE)
+        names(tx_window_seqs) <- read_ids
+        tx_window_seqs <- unique(tx_window_seqs)
+        
+        writeXStringSet(tx_window_seqs, 
+                        output_fasta,
+                        append = TRUE,
+                        compress = compress_output)
+        tx_window_seqs <- reverseComplement(tx_window_seqs)
+        names(tx_window_seqs) <- sub("[+]$", "-", names(tx_window_seqs))
+        writeXStringSet(tx_window_seqs, 
+                        output_fasta,
+                        append = TRUE,
+                        compress = compress_output)
+    }
+  
+    gns <- genes(txdb)    
+    gene_windows <- slidingWindows(gns, read_length, step = window)
+    
+    idx <- seq_along(gene_windows)
+    chunks <- split(idx, sort(rep_len(1:n_chunks, length(idx))))
+    for(i in seq_along(chunks)){
+        message("working on chunk for gene reads,: ", i , " of ", n_chunks)
+        chunk <- chunks[[i]]
+        w <- unlist(gene_windows[chunk], use.names = FALSE)
+        w <- w[width(w) >= min_read_length]
+        seqs <- scanFa(fa, w)
+        names(seqs) <- as.character(w)
+        writeXStringSet(seqs, 
+                        output_fasta,
+                        append = TRUE,
+                        compress = compress_output)
+        seqs <- reverseComplement(seqs)
+        names(seqs) <- as.character(invertStrand(w))
+        writeXStringSet(seqs, 
+                        output_fasta,
+                        append = TRUE,
+                        compress = compress_output)
+    }
+}
+
+fasta_fn <- "dbases/GRCm38.primary_assembly.genome.fa*"
+gtf_fn <- "dbases/gencode.vM25.annotation.gtf"
+
+generateSimulatedReads(fasta_fn, 
+                       gtf_fn, 
+                       output_fasta = "GRCm38.fasta.gz")
+```
+Assumes that the STAR index is located at `dbases/star/GRCm38`, modify as needed.
+
+```{bash}
+STAR \
+  --genomeDir dbases/star/GRCm38  \
+  --sjdbGTFfile dbases/gencode.vM25.annotation.gtf \
+  --runThreadN 12 \
+  --readFilesIn GRCm38.fasta.gz \
+  --readFilesCommand gunzip -c \
+  --outFileNamePrefix mismapped/GRCm38_ \
+  --outSAMattributes NH HI AS nM MD \
+  --outSAMtype BAM Unsorted \
+  --outFilterType BySJout \
+  --alignSJoverhangMin 8 \
+  --alignSJDBoverhangMin 2 \
+  --outFilterMismatchNoverLmax 0.04 \
+  --alignIntronMin 20 \
+  --alignIntronMax 1000000 \
+  --alignMatesGapMax 1000000
+
+samtools sort -@ 11 -m 2G  mismapped/GRCm38_Aligned.out.bam > mismapped/GRCm38.sorted.bam
+samtools index -@ 8 mismapped/GRCm38.sorted.bam
+rm -f  mismapped/GRCm38_Aligned.out.bam
+```
+
+```{r}
+library(raer)
+fp <- FilterParam(
+    min_base_quality     = 0,
+    min_mapq             = 255,
+    library_type         = "fr-second-strand",
+    trim_5p              = 0,
+    trim_3p              = 0,
+    indel_dist           = 0,
+    read_bqual           = c(0, 0),
+    min_splice_overhang  = 0,
+    min_depth            = 1,
+    min_variant_reads    = 1,
+    min_allelic_freq     = 0.01,
+    max_mismatch_type    = c(0,0),
+    report_multiallelic  = TRUE,
+    only_keep_variants   = TRUE,
+    bam_flags = Rsamtools::scanBamFlag(isSecondaryAlignment = FALSE,
+                                       isNotPassingQualityControls = FALSE,
+                                       isSupplementaryAlignment = FALSE,
+                                       isDuplicate = FALSE)
+)
+
+bpp <- MulticoreParam(
+    workers = 11,
+    progressbar = TRUE
+)
+
+rse <- pileup_sites(
+    bf,
+    fafile = fns$fa,
+    param = fp,
+    BPPARAM = bpp)
+saveRDS(rse, "mismapped/GRCm38_sites.rds")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+

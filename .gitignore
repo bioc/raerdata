@@ -1,0 +1,16 @@
+*.bam
+*.bai
+*.vcf
+*.err
+*.out
+*.html
+*.gz
+*.Rproj
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+docs
+docker
+inst/scripts/dbases
+inst/scripts/mismapped

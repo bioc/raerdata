@@ -1,0 +1,21 @@
+Package: raerdata
+Title: External data sets ...
+Version: 0.99.0
+Description: References made from ...
+Authors@R:
+    person(given = "Kent",
+             family = "Riemondy",
+             role = c("aut", "cre"),
+             comment = c(ORCID = "0000-0003-0750-1273"),
+             email = "kent.riemondy@cuanschutz.edu")
+License: MIT + file LICENSE
+URL: https://rnabioco.github.io/raerdata/
+Imports: utils, ExperimentHub, Rsamtools
+Suggests: rmarkdown, knitr, BiocStyle
+VignetteBuilder: knitr
+RoxygenNote: 7.2.1
+biocViews: SingleCellData, SequencingData, RNASeqData, ExperimentHub, PackageTypeData, ExpressionData
+BugReports: https://github.com/rnabioco/raerdata/issues
+Config/Needs/website:
+    pkgdown,
+    rnabioco/rbitemplate
