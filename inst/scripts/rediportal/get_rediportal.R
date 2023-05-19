@@ -1,0 +1,117 @@
+library(data.table)
+library(here)
+library(tools)
+library(Rsamtools)
+library(GenomicRanges)
+library(readxl)
+library(AnnotationHub)
+library(Biostrings)
+library(BSgenome.Hsapiens.UCSC.hg38)
+library(BSgenome.Mmusculus.UCSC.mm10)
+library(rtracklayer)
+
+# Known editing sites from the Rediportal database:
+# Mansi L, Tangaro MA, Lo Giudice C, et al. REDIportal: millions of novel A-to-I RNA editing events from thousands of RNAseq experiments. Nucleic Acids Res [Internet]. 2021;49:D1012–D1019. Available from: http://dx.doi.org/10.1093/nar/gkaa916.
+
+data_dir <- here("inst/scripts/rediportal")
+
+# hg38 database of known RNA editing sites from Rediportal (v2)
+url <- "http://srv00.recas.ba.infn.it/webshare/ATLAS/donwload/TABLE1_hg38.txt.gz"
+
+rediportal_flat_file <- file.path(data_dir, "TABLE1_hg38.txt.gz")
+if(!file.exists(rediportal_flat_file)){
+    download.file(url, rediportal_flat_file)
+    md5 <- md5sum(rediportal_flat_file)
+    stopifnot(unname(md5) == "cd809b839ccb38d1b6b60184a2d190e2")
+}
+
+dat <- fread(rediportal_flat_file, data.table = FALSE)
+dat <- dat[order(dat$Region, dat$Position), ]
+
+gr <- makeGRangesFromDataFrame(dat,
+                               seqnames.field = "Region",
+                               start.field = "Position",
+                               end.field = "Position",
+                               strand.field = "Strand",
+                               keep.extra.columns = TRUE)
+genome(gr) <- "hg38"
+
+# double check coordinates are correct (should be all A bases w.r.t strand)
+seqs <- getSeq(BSgenome.Hsapiens.UCSC.hg38, gr)
+
+# 43,223 sites are not A in reference, not sure why.
+gr <- gr[seqs == "A"]
+gr_simple <- gr
+mcols(gr_simple) <- NULL
+
+saveRDS(gr, file.path(data_dir, "rediportal_full_hg38.rds"))
+saveRDS(gr_simple, file.path(data_dir, "rediportal_coords_hg38.rds"))
+
+
+#mm10 database of known RNA editing sites from Rediportal (v2)
+url <-  "http://srv00.recas.ba.infn.it/webshare/ATLAS/donwload//TABLE1_mm10.txt.gz"
+
+rediportal_flat_file <- file.path(data_dir, "TABLE1_mm10.txt.gz")
+if(!file.exists(rediportal_flat_file)){
+    download.file(url, rediportal_flat_file)
+    md5 <- md5sum(rediportal_flat_file)
+    stopifnot(unname(md5) == "4f0e8a3b47cee70f7bab855236e4c4e4")
+}
+
+dat <- fread(rediportal_flat_file, data.table = FALSE)
+dat <- dat[order(dat$Region, dat$Position), ]
+gr <- makeGRangesFromDataFrame(dat,
+                               seqnames.field = "Region",
+                               start.field = "Position",
+                               end.field = "Position",
+                               strand.field = "Strand",
+                               keep.extra.columns = TRUE)
+genome(gr) <- "mm10"
+
+# double check coordinates are correct (should be all A bases w.r.t strand)
+seqs <- getSeq(BSgenome.Mmusculus.UCSC.mm10, gr)
+
+# all sites are A in reference, unnecessary, but may be needed in future versions
+gr <- gr[seqs == "A"]
+gr_simple <- gr
+mcols(gr_simple) <- NULL
+
+saveRDS(gr, file.path(data_dir, "rediportal_full_mm10.rds"))
+saveRDS(gr_simple, file.path(data_dir, "rediportal_coords_mm10.rds"))
+
+# Sites from:
+# Gabay O, Shoshan Y, Kopel E, et al. Landscape of adenosine-to-inosine RNA recoding across human tissues. Nat Commun [Internet]. 2022;13:1184. Available from: http://dx.doi.org/10.1038/s41467-022-28841-4.
+
+if(!file.exists(file.path(data_dir, "gabay_et_al_2022_sup_files.xlsx"))){
+    download.file("https://static-content.springer.com/esm/art%3A10.1038%2Fs41467-022-28841-4/MediaObjects/41467_2022_28841_MOESM3_ESM.xlsx",
+                  file.path(data_dir, "gabay_et_al_2022_sup_files.xlsx"))
+}
+
+gabay_sites <- read_excel(file.path(data_dir, "gabay_et_al_2022_sup_files.xlsx"),
+                          sheet = 3)
+gabay_sites <- makeGRangesFromDataFrame(gabay_sites,
+                             seqnames = "Chromosome",
+                             start.field = "Postion",
+                             end.field = "Postion",
+                             strand.field = "Strand",
+                             keep.extra.columns = TRUE)
+genome(gabay_sites) <- "hg38"
+seqs <- getSeq(BSgenome.Hsapiens.UCSC.hg38, gabay_sites)
+# all sites are A in hg38
+stopifnot(all(seqs == "A"))
+saveRDS(gabay_sites, file.path(data_dir, "gabay_sites_hg38.rds"))
+
+# liftover to mm10
+ah <- AnnotationHub()
+chainfile <- ah[["AH14109"]]
+mm10_gabay_sites <- liftOver(gabay_sites, chainfile)
+# 1448 of 1517 hg38 sites have 1-to-1 mapping,
+mm10_gabay_sites <- unlist(mm10_gabay_sites[elementNROWS(mm10_gabay_sites) == 1])
+
+# ensure that site is an A in mm10
+seqs <- getSeq(BSgenome.Mmusculus.UCSC.mm10, mm10_gabay_sites)
+# 1160 of 1148 are A
+mm10_gabay_sites <- mm10_gabay_sites[seqs == "A"]
+genome(gabay_sites) <- "mm10"
+
+saveRDS(mm10_gabay_sites, file.path(data_dir, "gabay_sites_mm10.rds"))

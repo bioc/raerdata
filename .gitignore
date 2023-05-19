@@ -5,6 +5,8 @@
 *.out
 *.html
 *.gz
+*.rds
+*.xlsx
 *.Rproj
 .Rproj.user
 .Rhistory
