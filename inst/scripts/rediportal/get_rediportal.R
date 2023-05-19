@@ -44,8 +44,8 @@ gr <- gr[seqs == "A"]
 gr_simple <- gr
 mcols(gr_simple) <- NULL
 
-saveRDS(gr, file.path(data_dir, "rediportal_full_hg38.rds"))
-saveRDS(gr_simple, file.path(data_dir, "rediportal_coords_hg38.rds"))
+save(gr, file = file.path(data_dir, "rediportal_full_hg38.rda"))
+save(gr_simple, file = file.path(data_dir, "rediportal_coords_hg38.rda"))
 
 
 #mm10 database of known RNA editing sites from Rediportal (v2)
@@ -76,8 +76,8 @@ gr <- gr[seqs == "A"]
 gr_simple <- gr
 mcols(gr_simple) <- NULL
 
-saveRDS(gr, file.path(data_dir, "rediportal_full_mm10.rds"))
-saveRDS(gr_simple, file.path(data_dir, "rediportal_coords_mm10.rds"))
+save(gr, file = file.path(data_dir, "rediportal_full_mm10.rda"))
+save(gr_simple, file = file.path(data_dir, "rediportal_coords_mm10.rda"))
 
 # Sites from:
 # Gabay O, Shoshan Y, Kopel E, et al. Landscape of adenosine-to-inosine RNA recoding across human tissues. Nat Commun [Internet]. 2022;13:1184. Available from: http://dx.doi.org/10.1038/s41467-022-28841-4.
@@ -99,7 +99,7 @@ genome(gabay_sites) <- "hg38"
 seqs <- getSeq(BSgenome.Hsapiens.UCSC.hg38, gabay_sites)
 # all sites are A in hg38
 stopifnot(all(seqs == "A"))
-saveRDS(gabay_sites, file.path(data_dir, "gabay_sites_hg38.rds"))
+save(gabay_sites, file = file.path(data_dir, "gabay_sites_hg38.rda"))
 
 # liftover to mm10
 ah <- AnnotationHub()
@@ -114,4 +114,4 @@ seqs <- getSeq(BSgenome.Mmusculus.UCSC.mm10, mm10_gabay_sites)
 mm10_gabay_sites <- mm10_gabay_sites[seqs == "A"]
 genome(gabay_sites) <- "mm10"
 
-saveRDS(mm10_gabay_sites, file.path(data_dir, "gabay_sites_mm10.rds"))
+save(mm10_gabay_sites, file = file.path(data_dir, "gabay_sites_mm10.rda"))

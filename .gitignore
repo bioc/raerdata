@@ -6,6 +6,7 @@
 *.html
 *.gz
 *.rds
+*.rda
 *.xlsx
 *.Rproj
 .Rproj.user

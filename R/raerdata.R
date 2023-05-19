@@ -1,21 +1,12 @@
-#' raerdata:
+#' raerdata
 #'
-#' ...
-#'
-#' Available datasets:
-#'
-#' + Mouse Cell Atlas
-#' - [ref_MCA()]
-#' + Tabula Muris (10X)
-#' - [ref_tabula_muris_drop()]
-#' + Tabula Muris (SmartSeq2)
+#' @description A collection of datasets and databases to demonstrate identification of RNA-editing sites using the raer package.
 #'
 #' @docType package
 #' @keywords internal
 #' @importFrom ExperimentHub ExperimentHub
 #' @importFrom utils read.csv
+#' @rdname raerdata
 #' @name raerdata
 NULL
 
-
-NULL

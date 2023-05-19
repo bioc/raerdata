@@ -13,7 +13,8 @@ URL: https://rnabioco.github.io/raerdata/
 Imports: utils, ExperimentHub, Rsamtools
 Suggests: rmarkdown, knitr, BiocStyle
 VignetteBuilder: knitr
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
+Encoding: UTF-8
 biocViews: SingleCellData, SequencingData, RNASeqData, ExperimentHub, PackageTypeData, ExpressionData
 BugReports: https://github.com/rnabioco/raerdata/issues
 Config/Needs/website:
