@@ -80,7 +80,7 @@ adar_ko <- data.frame(
 
 )
 
-pbmc_sc <- data.frame(
+sc_data <- data.frame(
 
 )
 

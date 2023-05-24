@@ -14,6 +14,7 @@ library(rtracklayer)
 # Mansi L, Tangaro MA, Lo Giudice C, et al. REDIportal: millions of novel A-to-I RNA editing events from thousands of RNAseq experiments. Nucleic Acids Res [Internet]. 2021;49:D1012–D1019. Available from: http://dx.doi.org/10.1093/nar/gkaa916.
 
 data_dir <- here("inst/scripts/rediportal")
+dir.create(data_dir, showWarnings = FALSE)
 
 # hg38 database of known RNA editing sites from Rediportal (v2)
 url <- "http://srv00.recas.ba.infn.it/webshare/ATLAS/donwload/TABLE1_hg38.txt.gz"

@@ -1,0 +1,157 @@
+---
+title: "NA12877: WGS and RNA-seq"
+author: Kent Riemondy
+date: "2023-05-22"
+output:
+    BiocStyle::html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(glue)
+library(Rbwa)
+library(Rsamtools)
+```
+
+## Whole genome sequencing data 
+
+FASTQ files for whole genome sequenicng of cell line NA12877 will be downloaded from ENA (id ERR262996) using wget. Reads will be aligned with BWA-mem and duplicates marked with picard MarkDuplicates.
+
+```{r wgs}
+options("timeout" = 600000)
+dir.create("NA12877/wgs", recursive = TRUE, showWarnings = FALSE)
+
+outbam <- "NA12877/NA12877.wgs.bam"
+if(!file.exists(outbam)){
+    
+    if(!file.exists("NA12877/wgs/ERR262996_1.fastq.gz")){
+        download.file("ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR262/ERR262996/ERR262996_1.fastq.gz",
+                      "NA12877/wgs/ERR262996_1.fastq.gz")
+    }
+    if(!file.exists("NA12877/wgs/ERR262996_2.fastq.gz")){
+        download.file("ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR262/ERR262996/ERR262996_2.fastq.gz",
+                      "NA12877/wgs/ERR262996_2.fastq.gz")
+    }
+    
+    fasta_fn <- "dbases/GRCh38.primary_assembly.genome.fa"
+    bwa_idx <- "dbases/bwa/human/GRCh38"
+    
+    wgs_fqs <- c("NA12877/wgs/ERR262996_1.fastq.gz", "NA12877/wgs/ERR262996_2.fastq.gz")
+    if(!file.exists(paste0(bwa_idx, ".pac"))){
+        dir.create("dbases/bwa/human", recursive = TRUE, showWarnings = FALSE)
+        bwa_build_index(fasta_fn, bwa_idx)
+    }
+    
+    
+    bwa_mem(type = "paired",
+            index_prefix = bwa_idx,
+            fastq_files = wgs_fqs,
+            t = 24,
+            sam_file = "NA12877/wgs/ERR262996.sam")
+    
+    bam_fn = asBam("NA12877/wgs/ERR262996.sam", overwrite=TRUE, indexDestination=TRUE)
+    
+    dedup_log <- "NA12877/wgs/dedup.log"
+    picard_cmd <- glue("picard MarkDuplicates", 
+                       "-Xms2g -Xmx8g -XX:ParallelGCThreads=2",
+                       "-I {bam_fn}",
+                       "-M {dedup_log}",
+                       "--MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 1000",
+                       "-O {outbam}",
+                       "--REMOVE_DUPLICATES false",
+                       "--CREATE_INDEX false",
+                       "--VALIDATION_STRINGENCY SILENT",
+                       .sep = " ")
+    rc <- system(picard_cmd)
+    stopifnot(rc == 0L)
+    indexBam(outbam)
+}
+```
+
+## Rna-seq data
+
+FASTQ files for RNA-seq data of cell line NA12877 will be downloaded from ENA (id SRR1258218) using wget. Reads will be aligned with STAR and duplicates marked with picard MarkDuplicates.
+
+```{rnaseq}
+dir.create("NA12877/rnaseq", recursive = TRUE, showWarnings = FALSE)
+
+outbam <- "NA12877/NA12877.rnaseq.bam"
+
+if(!file.exists(outbam)){
+    
+    if(!file.exists("NA12877/rnaseq/SRR1258218_1.fastq.gz")){
+        download.file("ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR125/008/SRR1258218/SRR1258218_1.fastq.gz",
+                      "NA12877/rnaseq/SRR1258218_1.fastq.gz")
+    }
+    if(!file.exists("NA12877/rnaseq/SRR1258218_2.fastq.gz")){
+        download.file("ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR125/008/SRR1258218/SRR1258218_2.fastq.gz",
+                      "NA12877/rnaseq/SRR1258218_2.fastq.gz")
+    }
+    
+    star_idx <- "dbases/star/GRCh38"
+    gtf <- "dbases/gencode.v37.annotation.gtf"
+    r1 <- "NA12877/rnaseq/SRR1258218_1.fastq.gz"
+    r2 <- "NA12877/rnaseq/SRR1258218_2.fastq.gz"
+    out_prefix <- "NA12877/rnaseq/SRR1258218_"
+    tmp_bam_file <- paste0(out_prefix, "Aligned.out.bam")
+    srted_bam_file <- paste0(out_prefix, "sorted")
+    
+    star_cmd <- glue("STAR",
+                     "--genomeDir {star_idx}",
+                     "--sjdbGTFfile {gtf}",
+                     "--runThreadN 24",
+                     "--readFilesIn {r1} {r2}",
+                     "--readFilesCommand gunzip -c",
+                     "--outFileNamePrefix {out_prefix}",
+                     "--outSAMattributes NH HI AS nM MD",
+                     "--outSAMtype BAM Unsorted",
+                     "--outFilterType BySJout",
+                     "--alignSJoverhangMin 8",
+                     "--alignSJDBoverhangMin 2",
+                     "--outFilterMismatchNoverLmax 0.04",
+                     "--alignIntronMin 20",
+                     "--alignIntronMax 1000000",
+                     "--alignMatesGapMax 1000000", 
+                     .sep = " ")
+    
+    rc <- system(star_cmd)
+    stopifnot(rc == 0L)
+    
+    srted_bam_file <- sortBam(tmp_bam_file, srted_bam_file)
+    unlink(tmp_bam_file)
+    
+    dedup_log <- "NA12877/rnaseq/dedup.log"
+    picard_cmd <- glue("picard MarkDuplicates", 
+                       "-Xms2g -Xmx8g -XX:ParallelGCThreads=2",
+                       "-I {srted_bam_file}",
+                       "-M {dedup_log}", 
+                       "--MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 1000",
+                       "-O {outbam}",
+                       "--REMOVE_DUPLICATES false",
+                       "--CREATE_INDEX false",
+                       "--VALIDATION_STRINGENCY SILENT",
+                       .sep = " ")
+    rc <- system(picard_cmd)
+    stopifnot(rc == 0L)
+    indexBam(outbam)
+}
+```
+
+## Clean up
+
+Only the bam files and their indexes will be retained. 
+
+```{r}
+unlink("NA12877/wgs", recursive = TRUE)
+unlink("NA12877/rnaseq", recursive = TRUE)
+```
+
+<details><summary>Show session info</summary>
+
+```{r code}
+sessionInfo()
+```
+</details>
