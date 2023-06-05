@@ -14,6 +14,10 @@
 
 # RefSeq_Curated_NM_CDS_010817.bed RefSeq_Curated_NM_Exons_010817.bed  RefSeq_Curated_NM_Gene_010817.bed
 # were all downloaded from the table browser.
+
+# a gene wide search is too expensive with this number of windows, not
+# performing for now. 
+
 # RefSeq_Curated_NM_Gene_010817.bed was modified to match formatting for CDS and Exons using:
 # awk 'BEGIN {OFS=FS="\t"} strand=($6 == "+")?"f":"r" {print $1,$2,$3,$4"_gene_0_0_"$1"_"$2 + 1"_"strand, $5, $6}' > RefSeq_Curated_NM_Gene_010817_mod.bed
 
@@ -125,9 +129,3 @@ get_misalignment_db \
   RefSeq_Curated_NM_Exons_010817_spliced_noNs_chopped_76_19_mms.bed \
   44
 
-get_misalignment_db \
-  RefSeq_Curated_NM_Gene_010817_mod.bed \
-  hg38_all.fa \
-  RefSeq_Curated_NM_Gene_010817_mod_spliced_noNs_chopped_76_19.pslx \
-  RefSeq_Curated_NM_Gene_010817_mod_spliced_noNs_chopped_76_19_mms.bed \
-  44

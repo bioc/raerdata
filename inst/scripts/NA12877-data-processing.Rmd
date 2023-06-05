@@ -75,7 +75,7 @@ if(!file.exists(outbam)){
 
 FASTQ files for RNA-seq data of cell line NA12877 will be downloaded from ENA (id SRR1258218) using wget. Reads will be aligned with STAR and duplicates marked with picard MarkDuplicates.
 
-```{rnaseq}
+```{r rnaseq}
 dir.create("NA12877/rnaseq", recursive = TRUE, showWarnings = FALSE)
 
 outbam <- "NA12877/NA12877.rnaseq.bam"
@@ -140,9 +140,44 @@ if(!file.exists(outbam)){
 }
 ```
 
+For the vignette, downsample to data from first megabase of chr4. 
+
+```{r}
+library(SNPlocs.Hsapiens.dbSNP155.GRCh38)
+library(GenomeInfoDb)
+snps <- snpsByOverlaps(SNPlocs.Hsapiens.dbSNP155.GRCh38, GRanges("4:1-1000000"))
+seqlevelsStyle(snps) <- "UCSC"
+snps$name <- snps$RefSNP_id
+snps$score <- 0L
+snps$alleles_as_ambig <- NULL
+snps$RefSNP_id <- NULL
+export(snps, "NA12877/chr4snps.bed.gz")
+
+fai <- scanFaIndex("dbases/GRCh38.primary_assembly.genome.fa")
+chr4_seq <- scanFa("dbases/GRCh38.primary_assembly.genome.fa", fai[seqnames(fai) == "chr4", ])
+writeXStringSet(chr4_seq, "NA12877/hg38_chr4.fa")
+bgzip("NA12877/hg38_chr4.fa")
+unlink("NA12877/hg38_chr4.fa")
+```
+
+```{bash}
+samtools view \
+  -F 1024 \
+  -b NA12877/NA12877.wgs.bam \
+  chr4:1-1000000 \
+  > NA12877/NA12877.wgs.sub.bam
+samtools index NA12877/NA12877.wgs.sub.bam
+
+samtools view \
+  -F 1024 \
+  -b NA12877/NA12877.rnaseq.bam \
+  chr4:1-1000000 \
+  > NA12877/NA12877.rnaseq.sub.bam
+samtools index NA12877/NA12877.rnaseq.sub.bam
+```
+
 ## Clean up
 
-Only the bam files and their indexes will be retained. 
 
 ```{r}
 unlink("NA12877/wgs", recursive = TRUE)

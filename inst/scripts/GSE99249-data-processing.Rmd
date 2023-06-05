@@ -8,26 +8,27 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+realign_data <- FALSE
 ```
 
 ```{r}
 library(glue)
+library(rtracklayer)
 library(Rsamtools)
-```
-
-## Obtaining fastq files
-
-FASTQ files will be downloaded using the fasterq-dump command-line tool from the sratoolkit.
-
-```{r}
+library(raer)
 sra_ids <- c("SRR5564260",
              "SRR5564261",
              "SRR5564269",
              "SRR5564270",
              "SRR5564271",
              "SRR5564277")
+```
 
-#sra_ids <- c("SRR5564277")
+## Obtaining fastq files
+
+FASTQ files will be downloaded using the fasterq-dump command-line tool from the sratoolkit.
+
+```{r, eval = realign_data}
 
 fq_suffixes <- paste0("_", 1:2, ".fastq")
 fq_files <- list()
@@ -51,7 +52,7 @@ for(i in seq_along(sra_ids)) {
 
 Reads are next aligned to the genome using STAR supplemented with splice junctions defined for the hg38 genome. The STAR index and gene annotations in GTF format were generated using the script provided at `inst/dbases/get_databases.sh`.
 
-```{r}
+```{r, eval = realign_data}
 star_idx <- "dbases/star/GRCh38"
 gtf <- "dbases/gencode.v37.annotation.gtf"
 star_bam_files <- list()
@@ -64,6 +65,13 @@ for(i in seq_along(sra_ids)){
     out_prefix <- file.path("GSE99249", sra_id, paste0(sra_id, "_"))
     tmp_bam_file <- paste0(out_prefix, "Aligned.out.bam")
     srted_bam_file <- paste0(out_prefix, "sorted")
+    out_bam <- paste0(srted_bam_file, ".bam")
+    
+    if(file.exists(out_bam)) {
+        star_bam_files[[sra_id]] <- out_bam
+        next;
+    } 
+    
     message("aligning sra_id: ", sra_id)
     
     star_cmd <- glue("STAR",
@@ -96,31 +104,215 @@ for(i in seq_along(sra_ids)){
 
 Duplicate reads are next identified using `MarkDuplicates` from picard, and bam file index files generated from final output bam files.
 
-```{r}
+```{r, eval = realign_data}
 for(i in seq_along(sra_ids)){
     sra_id <- sra_ids[[i]]
-    inbam <- bam_files[[sra_id]]
-    outbam <- file.path(sra_id, ".bam")
+    inbam <- star_bam_files[[sra_id]]
+    outbam <- file.path("GSE99249", paste0(sra_id, ".bam"))
+    if(file.exists(outbam)) next;
+    
+    dedup_log <- file.path("GSE99249", sra_id, "dedup.log")
     picard_cmd <- glue("picard MarkDuplicates", 
                        "-Xms2g -Xmx8g -XX:ParallelGCThreads=2",
                        "-I {inbam}",
+                       "-M {dedup_log}", 
                        "--MAX_FILE_HANDLES_FOR_READ_ENDS_MAP 1000",
                        "-O {outbam}",
                        "--REMOVE_DUPLICATES false",
                        "--CREATE_INDEX false",
                        "--VALIDATION_STRINGENCY SILENT",
                        .sep = " ")
-    
+    rc <- system(picard_cmd)
+    stopifnot(rc == 0L)
     indexBam(outbam)
 }
+```
+
+# Quantify RNA editing sites from REDIportal
+
+```{r raer}
+library(raer)
+library(BiocParallel)
+library(SummarizedExperiment)
+bam_fns <- file.path("GSE99249", paste0(sra_ids, ".bam"))
+names(bam_fns) <- sra_ids
+    
+fasta_fn <- "dbases/GRCh38.primary_assembly.genome.fa"
+load("rediportal/rediportal_coords_hg38.rda")
+
+fp <- FilterParam(
+    only_keep_variants = TRUE,
+    trim_5p = 5,
+    trim_3p = 5,
+    min_base_quality = 30L,
+    min_mapq = 255L,
+    library_type = "fr-first-strand",
+    min_allelic_freq = 0.01,
+    report_multiallelic = FALSE,
+    min_variant_reads = 1,
+    min_splice_overhang = 10
+)
+
+bpp <- MulticoreParam(workers = 11, progressbar = TRUE)
+rse.ifn <- pileup_sites(bam_fns,
+    fafile = fasta_fn,
+    sites = gr_simple,
+    param = fp,
+    BPPARAM = bpp
+)
+
+colData(rse.ifn)$genotype_treatment <- factor(rep(
+    c(
+        "ADAR1KO Interferon beta",
+        "Wildtype Interferon beta"
+    ),
+    each = 3
+))
+
+colData(rse.ifn)$genotype <- factor(rep(
+    c(
+        "ADAR1KO",
+        "Wildtype"
+    ),
+    each = 3
+))
+
+# keep sites with a depth >= 10 in all samples
+rse.ifn <- rse.ifn[rowSums(assay(rse.ifn, "nRef") + assay(rse.ifn, "nAlt") >= 10) == 6, ]
+rse.ifn <- filter_multiallelic(rse.ifn)
+
+save(rse.ifn, file = "GSE99249/ifn_adar.rda")
+```
+
+```{r}
+load("GSE99249/ifn_adar.rda")
+rse.ifn <- calc_edit_frequency(rse.ifn,
+    edit_from = "A",
+    edit_to = "G",
+    drop = TRUE
+)
+
+rse.ifn <- prep_for_de(rse.ifn, min_samples = 3)
+rse.ifn
+```
+
+
+# Make smaller test data for vignette
+
+Using only chr18
+
+```{r}
+for(i in seq_along(sra_ids)){
+    sra_id <- sra_ids[[i]]
+    inbam <- file.path("GSE99249", paste0(sra_id, ".bam"))
+    outbam <- file.path("GSE99249", paste0(sra_id, "_chr18.bam"))
+    if(file.exists(outbam)) next;
+    
+    subset_cmd <- glue("samtools view", 
+                       "-b",
+                       "-@ 4",
+                       "-s 42.5",
+                       "{inbam}",
+                       "chr18 > {outbam}",
+                       .sep = " ")
+    rc <- system(subset_cmd)
+    stopifnot(rc == 0L)
+    indexBam(outbam)
+}
+```
+
+# Make tiny dataset for testing package
+
+
+```{r}
+dir.create("pkg_data", recursive = TRUE)
+regions <- c("chr3:156540241-156540769",
+             "chr4:176330847-176331494",
+             "chr5:80627251-80627768")
+regions <- GRanges(regions)
+strand(regions) <- "+"
+
+seqs <- BSgenome::getSeq(FaFile(fasta_fn), regions)
+names(seqs) <- c("SSR3", "SPCS3", "DHFR")
+export(seqs, "pkg_data/human.fasta")
+
+strand(regions) <- c("-", "+", "-")
+regions$name <- names(seqs)
+regions$score <- 0L
+export(regions, "GSE99249/test_data_regions.bed")
+```
+
+```{bash}
+mkdir -p GSE99249/temp_data
+
+## build star index
+STAR --runMode genomeGenerate --genomeDir GSE99249/star/ --genomeFastaFiles GSE99249/pkg_data/human.fasta --genomeSAindexNbases 4 
+
+regions=GSE99249/test_data_regions.bed
+
+## extract reads in fasta file regions
+samtools view  -M -L $regions GSE99249/SRR5564269.bam \
+    | cut -f 1 \
+    | uniq > GSE99249/temp_data/reads_to_get.txt
+
+samtools view -b -N GSE99249/temp_data/reads_to_get.txt GSE99249/SRR5564269.bam \
+    | samtools sort -n \
+    | samtools fastq \
+      -1 GSE99249/temp_data/SRR5564269_1.fastq.gz \
+      -2 GSE99249/temp_data/SRR5564269_2.fastq.gz
+
+samtools view  -M -L $regions GSE99249/SRR5564277.bam \
+    | cut -f 1 \
+    | uniq > GSE99249/temp_data/reads_to_get.txt
+
+samtools view -b -N GSE99249/temp_data/reads_to_get.txt GSE99249/SRR5564277.bam \
+    | samtools sort -n \
+    | samtools fastq \
+      -1 GSE99249/temp_data/SRR5564277_1.fastq.gz \
+      -2 GSE99249/temp_data/SRR5564277_2.fastq.gz
+
+## remap
+
+STAR \
+    --readMapNumber 500 \
+    --outSAMtype BAM SortedByCoordinate \
+    --outSAMunmapped Within \
+    --outSAMmode Full \
+    --outSAMattributes NH HI AS nM MD \
+    --outFileNamePrefix pkg_data/SRR5564277_ \
+    --readFilesCommand "gunzip -c" \
+    --genomeDir GSE99249/star/ \
+    --readFilesIn  \
+      GSE99249/temp_data/SRR5564277_1.fastq.gz \
+      GSE99249/temp_data/SRR5564277_2.fastq.gz
+
+samtools index pkg_data/SRR5564277_Aligned.sortedByCoord.out.bam
+
+STAR \
+    --readMapNumber 500 \
+    --outSAMtype BAM SortedByCoordinate \
+    --outSAMunmapped Within \
+    --outSAMmode Full \
+    --outSAMattributes NH HI AS nM MD \
+    --outFileNamePrefix pkg_data/SRR5564269_ \
+    --readFilesCommand "gunzip -c" \
+    --genomeDir GSE99249/star/ \
+    --readFilesIn \
+       GSE99249/temp_data/SRR5564269_1.fastq.gz \
+       GSE99249/temp_data/SRR5564269_2.fastq.gz
+
+samtools index pkg_data/SRR5564269_Aligned.sortedByCoord.out.bam
+
+
+rm -rf GSE99249/temp_data GSE99249/star
 ```
 
 # Clean up
 
 Unneeded temporary files are next deleted, keeping only the bam and bam index files. 
 
-```{r}
-unlink(sra_ids, recursive = TRUE)
+```{r, eval = realign_data}
+unlink(file.path("GSE99249", sra_ids), recursive = TRUE)
 ```
 
 
