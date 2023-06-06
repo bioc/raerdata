@@ -12,12 +12,13 @@ library(BSgenome.Mmusculus.UCSC.mm10)
 
 # Known editing sites from the Rediportal database:
 # Mansi L, Tangaro MA, Lo Giudice C, et al. REDIportal: millions of novel A-to-I RNA editing events from thousands of RNAseq experiments. Nucleic Acids Res [Internet]. 2021;49:D1012–D1019. Available from: http://dx.doi.org/10.1093/nar/gkaa916.
+options(timeout = 3600)
 
 data_dir <- here("inst/scripts/rediportal")
 dir.create(data_dir, showWarnings = FALSE)
 
-# consider using fasta files directly instead of BSgenome objects
-# the getSeq method is unworkably slow on our linux server for some reason but fast when using a fasta file as input
+# consider using fasta files directly instead of BSgenome objects our our server
+# the getSeq method is unworkably slow on our server for some reason but using scanFa is fast when using a fasta file as input
 # extracting from bsgenome is very fast (a few seconds for 15 million sites) locally on macOS, so might be a drive networking issue?
 
 # hg38 database of known RNA editing sites from Rediportal (v2)
