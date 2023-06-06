@@ -18,6 +18,3 @@ singularity exec $image R --vanilla -e  "rmarkdown::render('${rmd}')"
 
 rmd="NA12877-data-processing.Rmd"
 singularity exec $image R --vanilla -e  "rmarkdown::render('${rmd}')"
-
-rsrc="misalignment-db-data-processing.R"
-singularity exec $image R --vanilla -e  "source('${rsrc}')"
