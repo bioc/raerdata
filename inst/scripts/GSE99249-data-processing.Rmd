@@ -128,76 +128,8 @@ for(i in seq_along(sra_ids)){
 }
 ```
 
-# Quantify RNA editing sites from REDIportal
 
-```{r raer}
-library(raer)
-library(BiocParallel)
-library(SummarizedExperiment)
-bam_fns <- file.path("GSE99249", paste0(sra_ids, ".bam"))
-names(bam_fns) <- sra_ids
-    
-fasta_fn <- "dbases/GRCh38.primary_assembly.genome.fa"
-load("rediportal/rediportal_coords_hg38.rda")
-
-fp <- FilterParam(
-    only_keep_variants = TRUE,
-    trim_5p = 5,
-    trim_3p = 5,
-    min_base_quality = 30L,
-    min_mapq = 255L,
-    library_type = "fr-first-strand",
-    min_allelic_freq = 0.01,
-    report_multiallelic = FALSE,
-    min_variant_reads = 1,
-    min_splice_overhang = 10
-)
-
-bpp <- MulticoreParam(workers = 11, progressbar = TRUE)
-rse.ifn <- pileup_sites(bam_fns,
-    fafile = fasta_fn,
-    sites = gr_simple,
-    param = fp,
-    BPPARAM = bpp
-)
-
-colData(rse.ifn)$genotype_treatment <- factor(rep(
-    c(
-        "ADAR1KO Interferon beta",
-        "Wildtype Interferon beta"
-    ),
-    each = 3
-))
-
-colData(rse.ifn)$genotype <- factor(rep(
-    c(
-        "ADAR1KO",
-        "Wildtype"
-    ),
-    each = 3
-))
-
-# keep sites with a depth >= 10 in all samples
-rse.ifn <- rse.ifn[rowSums(assay(rse.ifn, "nRef") + assay(rse.ifn, "nAlt") >= 10) == 6, ]
-rse.ifn <- filter_multiallelic(rse.ifn)
-
-save(rse.ifn, file = "GSE99249/ifn_adar.rda")
-```
-
-```{r}
-load("GSE99249/ifn_adar.rda")
-rse.ifn <- calc_edit_frequency(rse.ifn,
-    edit_from = "A",
-    edit_to = "G",
-    drop = TRUE
-)
-
-rse.ifn <- prep_for_de(rse.ifn, min_samples = 3)
-rse.ifn
-```
-
-
-# Make smaller test data for vignette
+# Make test data for vignette
 
 Using only chr18
 
@@ -219,10 +151,22 @@ for(i in seq_along(sra_ids)){
     stopifnot(rc == 0L)
     indexBam(outbam)
 }
+
+fasta_fn <- "dbases/GRCh38.primary_assembly.genome.fa"
+fai <- scanFaIndex(fasta_fn)
+seqs <- scanFa(fasta_fn, fai[seqnames(fai) == "chr18", ] )
+writeXStringSet(seqs, "GSE99249/chr18.fasta")
+bgzip("GSE99249/chr18.fasta")
+unlink("GSE99249/chr18.fasta")
+
+# remove the full bam files
+unlink(c(file.path("GSE99249", paste0(sra_ids, ".bam")),
+         file.path("GSE99249", paste0(sra_ids, ".bam.bai"))))
 ```
 
 # Make tiny dataset for testing package
 
+These files will be included directly in the `raer` package to be used for tests and examples. 
 
 ```{r}
 dir.create("pkg_data", recursive = TRUE)
@@ -304,7 +248,7 @@ STAR \
 samtools index pkg_data/SRR5564269_Aligned.sortedByCoord.out.bam
 
 
-rm -rf GSE99249/temp_data GSE99249/star
+rm -rf GSE99249/temp_data GSE99249/star GSE99249/test_data_regions.bed
 ```
 
 # Clean up

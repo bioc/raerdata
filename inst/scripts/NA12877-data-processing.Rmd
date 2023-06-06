@@ -182,6 +182,10 @@ samtools index NA12877/NA12877.rnaseq.sub.bam
 ```{r}
 unlink("NA12877/wgs", recursive = TRUE)
 unlink("NA12877/rnaseq", recursive = TRUE)
+unlink(c("NA12877/NA12877.rnaseq.bam",
+         "NA12877/NA12877.rnaseq.bam.bai",
+         "NA12877/NA12877.wgs.bam",
+         "NA12877/NA12877.wgs.bam.bai"))
 ```
 
 <details><summary>Show session info</summary>
