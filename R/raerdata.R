@@ -60,7 +60,7 @@ NULL
 #' \itemize{
 #' \item \code{Name}, the name of the BAM file without the \code{*.bam} extension.
 #' \item \code{Description}, a short string containing the experimental condition and replicate number.
-#' \item \code{Path}, a \linkS4class{BamFile} containing the path to each BAM file.
+#' \item \code{Path},the path to each BAM file.
 #'
 #' @rdname NA12877
 #'

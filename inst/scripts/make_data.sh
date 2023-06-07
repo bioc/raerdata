@@ -6,7 +6,13 @@
 
 mkdir -p logs
 
+#singularity image from dockerhub rnabioco/raer-ms
 image="../../docker/raer-ms.sif"
+
+cd dbases
+bash get_databases.sh
+cd -
+
 rmd="rediportal-data-processing.R"
 singularity exec $image R --vanilla -e  "source('${rmd}')"
 
