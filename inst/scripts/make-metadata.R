@@ -24,8 +24,8 @@ rediportal <- data.frame(
                               "rediportal_coords_mm10.rda",
                               "rediportal_full_hg38.rda",
                               "rediportal_coords_hg38.rda",
-                              "gabay_sites_mm10.rds",
-                              "gabay_sites_hg38.rds"
+                              "gabay_sites_mm10.rda",
+                              "gabay_sites_hg38.rda"
                            )),
     BiocVersion="3.18",
     Genome=c(

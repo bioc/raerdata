@@ -1,0 +1,102 @@
+---
+title: "raerdata: a collection of datasets and databases for use with the raer package" 
+author: 
+  - name: Kent Riemondy
+    affiliation: University of Colorado School of Medicine
+date: '`r Sys.Date()`'
+output:
+  BiocStyle::html_document
+package: raerdata 
+bibliography: ref.bib 
+vignette: >
+  %\VignetteIndexEntry{raerdata}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}    
+---
+
+```{r, echo=FALSE, results="hide"}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+The `raerdata` package contains datasets and databases used to illustrate functionality
+in the `raer` package.
+
+```{r}
+library(raerdata)
+```
+
+The package contains the following resources.
+
+## RNA editing Atlases 
+
+Atlases of known RNA editing sites formatted into `GRanges` objects. 
+
+### REDIportal 
+
+The `REDIportal` is a collection of RNA editing sites identified from multiple studies
+in multiple species (@Picardi2017-gn). The human (`hg38`) and mouse (`mm10`) collections are provided in 
+GRanges objects, in either coordinate only format, or with additional metadata. 
+
+```{r}
+rediportal_coords_hg38()
+```
+
+### CDS recoding sites 
+
+Human `CDS` recoding RNA editing sites identified by @Gabay2022-gw were formatted into
+`GRanges` objects. These sites were also lifted over to the mouse genome (`mm10`).
+
+```r
+gabay_sites_hg38()
+```
+
+## Datasets
+
+### Whole genome and RNA sequencing data from NA12877 cell line
+
+WGS and RNA-seq BAM and associated files generated from a subset of chromosome 4.
+Paths to files and data objects are returned in a list. 
+
+```{r}
+NA12877()
+```
+
+### GSE99249: RNA-Seq of interferon Beta treatment of ADAR1KO cell line
+
+RNA-seq BAM files from ADAR1KO and Wild-Type HEK293 cells and associated files from chromosome 18 (@Chung2018-gh)
+
+```{r}
+GSE99249()
+```
+
+
+### 10x Genomics 10k PBMC scRNA-seq
+
+10x genomics BAM file and associated files from chromosome 16 of human PBMC scRNA-seq library.
+
+```{r}
+pbmc_10x()
+```
+
+## ExperimentHub access
+
+Alternatively individual files can be accessed from the ExperimentHub directly
+
+```{r}
+library(ExperimentHub)
+eh <- ExperimentHub()
+query(eh, "raerdata")
+```
+
+<details style="margin-bottom:10px;">
+<summary>
+    Session info
+</summary>
+
+```{r}
+sessionInfo()
+```
+
+</details>
+
+
