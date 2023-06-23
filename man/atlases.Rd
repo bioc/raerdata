@@ -45,3 +45,4 @@ converted into a GRanges object, which only contains the coordinates of the edit
 
 \code{gabay_sites_mm10()} will download high-confidence mouse CDS editing sites (lifted-over from hg38 to mm10).
 }
+\concept{atlases}

@@ -10,7 +10,13 @@ Authors@R:
              email = "kent.riemondy@cuanschutz.edu")
 License: MIT + file LICENSE
 URL: https://rnabioco.github.io/raerdata/
-Imports: utils, ExperimentHub, Rsamtools
+Imports: 
+  ExperimentHub, 
+  Rsamtools, 
+  SingleCellExperiment, 
+  rtracklayer, 
+  GenomicRanges,
+  BiocGenerics
 Suggests: rmarkdown, knitr, BiocStyle
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)

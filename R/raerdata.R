@@ -4,7 +4,7 @@
 #' analysis approaches using the raer package.
 #' 
 #' @details
-#' [`atlases`] a collection of RNA editing databases  
+#' [`atlases`][rediportal_full_hg38] a collection of RNA editing databases  
 #' 
 #' [`NA12877`] Whole genome and RNA sequencing from the NA12877 cell line
 #' 
@@ -16,7 +16,7 @@
 #' 
 #' @docType package
 #' @importFrom ExperimentHub ExperimentHub
-#' @importFrom utils read.csv
+#' @import Rsamtools 
 #' @rdname raerdata
 #' @name raerdata
 NULL
@@ -46,7 +46,7 @@ NULL
 #'  `gabay_sites_mm10()` will download high-confidence mouse CDS editing sites (lifted-over from hg38 to mm10).
 #'
 #' @rdname atlases
-
+#' @family atlases
 #' @export
 rediportal_full_mm10 <- function(){
     eh <- ExperimentHub()
@@ -54,6 +54,7 @@ rediportal_full_mm10 <- function(){
 }
 
 #' @rdname atlases
+#' @family atlases
 #' @export
 rediportal_coords_mm10 <- function(){
     eh <- ExperimentHub()
@@ -61,6 +62,7 @@ rediportal_coords_mm10 <- function(){
 }
 
 #' @rdname atlases
+#' @family atlases
 #' @export
 rediportal_full_hg38 <- function(){
     eh <- ExperimentHub()
@@ -68,6 +70,7 @@ rediportal_full_hg38 <- function(){
 }
 
 #' @rdname atlases
+#' @family atlases
 #' @export
 rediportal_coords_hg38 <- function(){
     eh <- ExperimentHub()
@@ -103,7 +106,9 @@ gabay_sites_hg38 <- function(){
 #' \item \code{snps} a GRanges object containing snps from the first megabase of chr4
 #' }
 #' @rdname NA12877
-#' @importFrom Rsamtools FaFile BamFileList
+#' @import Rsamtools 
+#' @importFrom BiocGenerics path
+#' @import GenomicRanges
 #' @export
 NA12877 <- function() {
     eh <- ExperimentHub::ExperimentHub()
@@ -151,6 +156,7 @@ NA12877 <- function() {
 #' \item \code{snps} a [GRanges] object containing known snps from the Rediportal database (hg38)
 #' }
 #' @rdname GSE99249
+#' @import rtracklayer
 #' @export
 GSE99249 <- function() {
     eh <- ExperimentHub::ExperimentHub()
@@ -202,6 +208,7 @@ GSE99249 <- function() {
 #'  a UMAP projection and cell type annotations. 
 #' }
 #' @rdname pbmc_10x
+#' @import SingleCellExperiment
 #' @export
 pbmc_10x <- function(){
     eh <- ExperimentHub::ExperimentHub()

@@ -9,7 +9,7 @@ A collection of datasets and databases to demonstrate RNA-editing
 analysis approaches using the raer package.
 }
 \details{
-\code{\link{atlases}} a collection of RNA editing databases
+\code{\link[=rediportal_full_hg38]{atlases}} a collection of RNA editing databases
 
 \code{\link{NA12877}} Whole genome and RNA sequencing from the NA12877 cell line
 
