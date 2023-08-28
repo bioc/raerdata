@@ -135,29 +135,29 @@ sc_data <- data.frame(
 
 rna_dna <- data.frame(
     Title = c(
-        "WGS of NA12877 cell line, first megabase of chr4, (BAM)",
-        "WGS of NA12877 cell line, first megabase of chr4, (BAI)",
-        "RNA-seq of NA12877 cell line, first megabase of chr4, (BAM)",
-        "RNA-seq of NA12877 cell line, first megabase of chr4, (BAI)",
+        "WGS of NA12878 cell line, first megabase of chr4, (BAM)",
+        "WGS of NA12878 cell line, first megabase of chr4, (BAI)",
+        "RNA-seq of NA12878 cell line, first megabase of chr4, (BAM)",
+        "RNA-seq of NA12878 cell line, first megabase of chr4, (BAI)",
         "SNPs from chr4 in dbSNP155",
         "Genome sequence of first megabase of chr4 (hg38)"
     ),
     Description = c(
-        "Whole genome sequencing of NA12877 cell line, alignments from first megabase of chr4, (BAM)",
-        "Whole genome sequencing of NA12877 cell line, alignments from first megabase of chr4, (BAI)",
-        "RNA sequencing of NA12877 cell line, alignments from first megabase of chr4, (BAM)",
-        "RNA sequencing of NA12877 cell line, alignments from first megabase of chr4, (BAI)",
+        "Whole genome sequencing of NA12878 cell line, alignments from first megabase of chr4, (BAM)",
+        "Whole genome sequencing of NA12878 cell line, alignments from first megabase of chr4, (BAI)",
+        "RNA sequencing of NA12878 cell line, alignments from first megabase of chr4, (BAM)",
+        "RNA sequencing of NA12878 cell line, alignments from first megabase of chr4, (BAI)",
         "SNPs from dbSNP155 within first megabase of chr4 (hg38)",
         "Genome sequence of first megabase of chr4 (hg38)"
     ),
     RDataPath = file.path("raerdata",
-                          "NA12877",
+                          "NA12878",
                           "1.0.0",
                           c(
-                              "NA12877.rnaseq.sub.bam",
-                              "NA12877.rnaseq.sub.bam.bai",
-                              "NA12877.wgs.sub.bam",
-                              "NA12877.wgs.sub.bam.bai",
+                              "NA12878.wgs.sub.bam",
+                              "NA12878.wgs.sub.bam.bai",
+                              "NA12878.rnaseq.sub.bam",
+                              "NA12878.rnaseq.sub.bam.bai",
                               "chr4snps.bed.gz",
                               "hg38_chr4.fa.bgz"
                           )
@@ -173,8 +173,8 @@ rna_dna <- data.frame(
         "FASTA"
     ),
     SourceUrl=c(
-        "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR262/ERR262996",
-        "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR262/ERR262996",
+        "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR262/ERR262997",
+        "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR262/ERR262997",
         "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR125/008/SRR1258218",
         "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR125/008/SRR1258218",
         "https://bioconductor.org/packages/3.17/data/annotation/html/SNPlocs.Hsapiens.dbSNP155.GRCh38.html",

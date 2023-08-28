@@ -47,6 +47,10 @@ seqs <- getSeq(BSgenome.Hsapiens.UCSC.hg38, gr)
 
 # 43,223 sites are not A in reference, not sure why.
 rediportal_full_hg38 <- gr[seqs == "A"]
+
+# remove names, saves ~ 1 Gb in RAM
+names(rediportal_full_hg38) <- NULL
+
 rediportal_coords_hg38 <- rediportal_full_hg38
 mcols(rediportal_coords_hg38) <- NULL
 
@@ -79,6 +83,10 @@ seqs <- getSeq(BSgenome.Mmusculus.UCSC.mm10, gr)
 
 # all sites are A in reference, unnecessary, but may be needed in future versions
 rediportal_full_mm10 <- gr[seqs == "A"]
+
+# remove names
+names(rediportal_full_mm10) <- NULL
+
 rediportal_coords_mm10 <- rediportal_full_mm10
 mcols(rediportal_coords_mm10) <- NULL
 
@@ -105,6 +113,10 @@ genome(gabay_sites_hg38) <- "hg38"
 seqs <- getSeq(BSgenome.Hsapiens.UCSC.hg38, gabay_sites_hg38)
 # all sites are A in hg38
 stopifnot(all(seqs == "A"))
+
+# remove names
+names(gabay_sites_hg38) <- NULL
+
 save(gabay_sites_hg38, file = file.path(data_dir, "gabay_sites_hg38.rda"))
 
 # liftover to mm10
@@ -116,9 +128,10 @@ gabay_sites_mm10 <- unlist(gabay_sites_mm10[elementNROWS(gabay_sites_mm10) == 1]
 
 # ensure that site is an A in mm10
 seqs <- getSeq(BSgenome.Mmusculus.UCSC.mm10, gabay_sites_mm10)
-# 1160 of 1148 are A
+# 1160 of 1448 are A
 gabay_sites_mm10 <- gabay_sites_mm10[seqs == "A"]
 genome(gabay_sites_mm10) <- "mm10"
+names(gabay_sites_mm10) <- NULL
 
 save(gabay_sites_mm10, file = file.path(data_dir, "gabay_sites_mm10.rda"))
 

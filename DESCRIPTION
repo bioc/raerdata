@@ -1,6 +1,6 @@
 Package: raerdata
 Title: External data sets ...
-Version: 0.99.0
+Version: 0.99.1
 Description: References made from ...
 Authors@R:
     person(given = "Kent",

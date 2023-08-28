@@ -1,5 +1,5 @@
 ---
-title: "NA12877: WGS and RNA-seq"
+title: "NA12878: WGS and RNA-seq"
 author: Kent Riemondy
 date: "2023-05-22"
 output:
@@ -18,28 +18,28 @@ library(Rsamtools)
 
 ## Whole genome sequencing data 
 
-FASTQ files for whole genome sequenicng of cell line NA12877 will be downloaded from ENA (id ERR262996) using wget. Reads will be aligned with BWA-mem and duplicates marked with picard MarkDuplicates.
+FASTQ files for whole genome sequencing of cell line NA12878 will be downloaded from ENA (id ERR262997) using wget. Reads will be aligned with BWA-mem and duplicates marked with picard MarkDuplicates.
 
 ```{r wgs}
 options("timeout" = 600000)
-dir.create("NA12877/wgs", recursive = TRUE, showWarnings = FALSE)
+dir.create("NA12878/wgs", recursive = TRUE, showWarnings = FALSE)
 
-outbam <- "NA12877/NA12877.wgs.bam"
+outbam <- "NA12878/NA12878.wgs.bam"
 if(!file.exists(outbam)){
     
-    if(!file.exists("NA12877/wgs/ERR262996_1.fastq.gz")){
-        download.file("ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR262/ERR262996/ERR262996_1.fastq.gz",
-                      "NA12877/wgs/ERR262996_1.fastq.gz")
+    if(!file.exists("NA12878/wgs/ERR262997_1.fastq.gz")){
+        download.file("ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR262/ERR262997/ERR262997_1.fastq.gz",
+                      "NA12878/wgs/ERR262997_1.fastq.gz")
     }
-    if(!file.exists("NA12877/wgs/ERR262996_2.fastq.gz")){
-        download.file("ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR262/ERR262996/ERR262996_2.fastq.gz",
-                      "NA12877/wgs/ERR262996_2.fastq.gz")
+    if(!file.exists("NA12878/wgs/ERR262997_2.fastq.gz")){
+        download.file("ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR262/ERR262997/ERR262997_2.fastq.gz",
+                      "NA12878/wgs/ERR262997_2.fastq.gz")
     }
     
     fasta_fn <- "dbases/GRCh38.primary_assembly.genome.fa"
     bwa_idx <- "dbases/bwa/human/GRCh38"
     
-    wgs_fqs <- c("NA12877/wgs/ERR262996_1.fastq.gz", "NA12877/wgs/ERR262996_2.fastq.gz")
+    wgs_fqs <- c("NA12878/wgs/ERR262997_1.fastq.gz", "NA12878/wgs/ERR262997_2.fastq.gz")
     if(!file.exists(paste0(bwa_idx, ".pac"))){
         dir.create("dbases/bwa/human", recursive = TRUE, showWarnings = FALSE)
         bwa_build_index(fasta_fn, bwa_idx)
@@ -50,11 +50,11 @@ if(!file.exists(outbam)){
             index_prefix = bwa_idx,
             fastq_files = wgs_fqs,
             t = 24,
-            sam_file = "NA12877/wgs/ERR262996.sam")
+            sam_file = "NA12878/wgs/ERR262997.sam")
     
-    bam_fn = asBam("NA12877/wgs/ERR262996.sam", overwrite=TRUE, indexDestination=TRUE)
+    bam_fn = asBam("NA12878/wgs/ERR262997.sam", overwrite=TRUE, indexDestination=TRUE)
     
-    dedup_log <- "NA12877/wgs/dedup.log"
+    dedup_log <- "NA12878/wgs/dedup.log"
     picard_cmd <- glue("picard MarkDuplicates", 
                        "-Xms2g -Xmx8g -XX:ParallelGCThreads=2",
                        "-I {bam_fn}",
@@ -73,29 +73,29 @@ if(!file.exists(outbam)){
 
 ## Rna-seq data
 
-FASTQ files for RNA-seq data of cell line NA12877 will be downloaded from ENA (id SRR1258218) using wget. Reads will be aligned with STAR and duplicates marked with picard MarkDuplicates.
+FASTQ files for RNA-seq data of cell line NA12878 will be downloaded from ENA (id SRR1258218) using wget. Reads will be aligned with STAR and duplicates marked with picard MarkDuplicates.
 
 ```{r rnaseq}
-dir.create("NA12877/rnaseq", recursive = TRUE, showWarnings = FALSE)
+dir.create("NA12878/rnaseq", recursive = TRUE, showWarnings = FALSE)
 
-outbam <- "NA12877/NA12877.rnaseq.bam"
+outbam <- "NA12878/NA12878.rnaseq.bam"
 
 if(!file.exists(outbam)){
     
-    if(!file.exists("NA12877/rnaseq/SRR1258218_1.fastq.gz")){
+    if(!file.exists("NA12878/rnaseq/SRR1258218_1.fastq.gz")){
         download.file("ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR125/008/SRR1258218/SRR1258218_1.fastq.gz",
-                      "NA12877/rnaseq/SRR1258218_1.fastq.gz")
+                      "NA12878/rnaseq/SRR1258218_1.fastq.gz")
     }
-    if(!file.exists("NA12877/rnaseq/SRR1258218_2.fastq.gz")){
+    if(!file.exists("NA12878/rnaseq/SRR1258218_2.fastq.gz")){
         download.file("ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR125/008/SRR1258218/SRR1258218_2.fastq.gz",
-                      "NA12877/rnaseq/SRR1258218_2.fastq.gz")
+                      "NA12878/rnaseq/SRR1258218_2.fastq.gz")
     }
     
     star_idx <- "dbases/star/GRCh38"
     gtf <- "dbases/gencode.v37.annotation.gtf"
-    r1 <- "NA12877/rnaseq/SRR1258218_1.fastq.gz"
-    r2 <- "NA12877/rnaseq/SRR1258218_2.fastq.gz"
-    out_prefix <- "NA12877/rnaseq/SRR1258218_"
+    r1 <- "NA12878/rnaseq/SRR1258218_1.fastq.gz"
+    r2 <- "NA12878/rnaseq/SRR1258218_2.fastq.gz"
+    out_prefix <- "NA12878/rnaseq/SRR1258218_"
     tmp_bam_file <- paste0(out_prefix, "Aligned.out.bam")
     srted_bam_file <- paste0(out_prefix, "sorted")
     
@@ -123,7 +123,7 @@ if(!file.exists(outbam)){
     srted_bam_file <- sortBam(tmp_bam_file, srted_bam_file)
     unlink(tmp_bam_file)
     
-    dedup_log <- "NA12877/rnaseq/dedup.log"
+    dedup_log <- "NA12878/rnaseq/dedup.log"
     picard_cmd <- glue("picard MarkDuplicates", 
                        "-Xms2g -Xmx8g -XX:ParallelGCThreads=2",
                        "-I {srted_bam_file}",
@@ -151,41 +151,41 @@ snps$name <- snps$RefSNP_id
 snps$score <- 0L
 snps$alleles_as_ambig <- NULL
 snps$RefSNP_id <- NULL
-export(snps, "NA12877/chr4snps.bed.gz")
+export(snps, "NA12878/chr4snps.bed.gz")
 
 fai <- scanFaIndex("dbases/GRCh38.primary_assembly.genome.fa")
 chr4_seq <- scanFa("dbases/GRCh38.primary_assembly.genome.fa", fai[seqnames(fai) == "chr4", ])
-writeXStringSet(chr4_seq, "NA12877/hg38_chr4.fa")
-bgzip("NA12877/hg38_chr4.fa")
-unlink("NA12877/hg38_chr4.fa")
+writeXStringSet(chr4_seq, "NA12878/hg38_chr4.fa")
+bgzip("NA12878/hg38_chr4.fa")
+unlink("NA12878/hg38_chr4.fa")
 ```
 
 ```{bash}
 samtools view \
   -F 1024 \
-  -b NA12877/NA12877.wgs.bam \
+  -b NA12878/NA12878.wgs.bam \
   chr4:1-1000000 \
-  > NA12877/NA12877.wgs.sub.bam
-samtools index NA12877/NA12877.wgs.sub.bam
+  > NA12878/NA12878.wgs.sub.bam
+samtools index NA12878/NA12878.wgs.sub.bam
 
 samtools view \
   -F 1024 \
-  -b NA12877/NA12877.rnaseq.bam \
+  -b NA12878/NA12878.rnaseq.bam \
   chr4:1-1000000 \
-  > NA12877/NA12877.rnaseq.sub.bam
-samtools index NA12877/NA12877.rnaseq.sub.bam
+  > NA12878/NA12878.rnaseq.sub.bam
+samtools index NA12878/NA12878.rnaseq.sub.bam
 ```
 
 ## Clean up
 
 
 ```{r}
-unlink("NA12877/wgs", recursive = TRUE)
-unlink("NA12877/rnaseq", recursive = TRUE)
-unlink(c("NA12877/NA12877.rnaseq.bam",
-         "NA12877/NA12877.rnaseq.bam.bai",
-         "NA12877/NA12877.wgs.bam",
-         "NA12877/NA12877.wgs.bam.bai"))
+unlink("NA12878/wgs", recursive = TRUE)
+unlink("NA12878/rnaseq", recursive = TRUE)
+unlink(c("NA12878/NA12878.rnaseq.bam",
+         "NA12878/NA12878.rnaseq.bam.bai",
+         "NA12878/NA12878.wgs.bam",
+         "NA12878/NA12878.wgs.bam.bai"))
 ```
 
 <details><summary>Show session info</summary>

@@ -6,7 +6,7 @@
 #' @details
 #' [`atlases`][rediportal_full_hg38] a collection of RNA editing databases  
 #' 
-#' [`NA12877`] Whole genome and RNA sequencing from the NA12877 cell line
+#' [`NA12878`] Whole genome and RNA sequencing from the NA12878 cell line
 #' 
 #' [`GSE99249`]  RNA sequencing data from a study that examined RNA editing in
 #' WT, ADAR1KO, and ADAR1-p150 HEK293T cells treated with and without interferon beta.
@@ -91,12 +91,12 @@ gabay_sites_hg38 <- function(){
     eh[["EH8238"]]
 }
 
-#' Whole genome and RNA sequencing data from NA12877 cell line
+#' Whole genome and RNA sequencing data from NA12878 cell line
 #'
 #'
 #' @details
 #' Will download BAM and BAM index files from whole genome and RNA sequencing of
-#' the NA12877 cell line, The data is from the first megabase of chromosome 4. Additionally 
+#' the NA12878 cell line, The data is from the first megabase of chromosome 4. Additionally 
 #' a fasta file and a database of known SNPS will be downloaded. 
 #' 
 #' @returns A list containing:
@@ -105,18 +105,18 @@ gabay_sites_hg38 <- function(){
 #' \item \code{fasta} the path to a fasta file containing the first megabase of chr4
 #' \item \code{snps} a GRanges object containing snps from the first megabase of chr4
 #' }
-#' @rdname NA12877
+#' @rdname NA12878
 #' @import Rsamtools 
 #' @importFrom BiocGenerics path
 #' @import GenomicRanges
 #' @export
-NA12877 <- function() {
+NA12878 <- function() {
     eh <- ExperimentHub::ExperimentHub()
     
-    # get bam files
+    # bam files
     eh_ids <- c("EH8256", "EH8257", "EH8258", "EH8259")
     paths <- unlist(lapply(eh_ids, function(x) eh[[x]]))
-    nms <- c("NA12877_WGS", "NA12877_RNASEQ")
+    nms <- c("NA12878_RNASEQ", "NA12878_WGS")
     desc <- eh[eh_ids]$title
     is_bam <- grepl("(BAM)", desc)
     desc <- desc[is_bam]
@@ -124,7 +124,7 @@ NA12877 <- function() {
     idxs <- paths[!is_bam]
     bams <- BamFileList(bams, idxs)
     names(bams) <- nms
-    
+
     # snps
     snps <- eh[["EH8260"]]
     
