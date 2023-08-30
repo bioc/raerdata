@@ -107,7 +107,12 @@ sc_data <- data.frame(
         "MTX",
         "TSV"
     ),
-    SourceUrl="https://www.10xgenomics.com/resources/datasets/10k-human-pbmcs-3-v3-1-chromium-x-with-intronic-reads-3-1-high",
+    SourceUrl= c(    
+        "https://www.10xgenomics.com/resources/datasets/10k-human-pbmcs-3-v3-1-chromium-x-with-intronic-reads-3-1-high",
+        "https://www.10xgenomics.com/resources/datasets/10k-human-pbmcs-3-v3-1-chromium-x-with-intronic-reads-3-1-high",
+        "https://www.10xgenomics.com/resources/datasets/10k-human-pbmcs-3-v3-1-chromium-x-with-intronic-reads-3-1-high",
+        "http://srv00.recas.ba.infn.it/atlas/"
+    ),
     SourceVersion="1",
     Species="Homo sapiens",
     TaxonomyId="9606",
@@ -115,9 +120,14 @@ sc_data <- data.frame(
         FALSE,
         FALSE,
         NA,
-        FALSE
+        TRUE
     ),
-    DataProvider="10x Genomics",
+    DataProvider=c(
+        "10x Genomics",
+        "10x Genomics",
+        "10x Genomics",
+        "REDIportal"
+    ),
     Maintainer="kent.riemondy@cuanschutz.com",
     RDataClass=c(
         "character",

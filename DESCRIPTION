@@ -9,7 +9,6 @@ Authors@R:
              comment = c(ORCID = "0000-0003-0750-1273"),
              email = "kent.riemondy@cuanschutz.edu")
 License: MIT + file LICENSE
-URL: https://rnabioco.github.io/raerdata/
 Imports: 
   ExperimentHub, 
   Rsamtools, 
