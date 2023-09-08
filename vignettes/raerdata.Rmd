@@ -54,13 +54,13 @@ cds_sites[1:4, 1:4]
 
 ## Datasets
 
-### Whole genome and RNA sequencing data from NA12877 cell line
+### Whole genome and RNA sequencing data from NA12878 cell line
 
 WGS and RNA-seq BAM and associated files generated from a subset of chromosome 4.
 Paths to files and related data objects are returned in a list. 
 
 ```{r}
-NA12877()
+NA12878()
 ```
 
 ### GSE99249: RNA-Seq of interferon Beta treatment of ADAR1KO cell line

@@ -20,5 +20,5 @@ Whole genome and RNA sequencing data from NA12878 cell line
 \details{
 Will download BAM and BAM index files from whole genome and RNA sequencing of
 the NA12878 cell line, The data is from the first megabase of chromosome 4. Additionally
-a fasta file and a database of known SNPS will be downloaded.
+a fasta file and a database of known SNPs will be downloaded.
 }

@@ -11,10 +11,10 @@ analysis approaches using the raer package.
 \details{
 \code{\link[=rediportal_full_hg38]{atlases}} a collection of RNA editing databases
 
-\code{\link{NA12878}} Whole genome and RNA sequencing from the NA12878 cell line
+\code{\link{NA12878}} Whole genome and RNA sequencing data from the NA12878 cell line
 
-\code{\link{GSE99249}}  RNA sequencing data from a study that examined RNA editing in
+\code{\link{GSE99249}} RNA sequencing data from a study that examined RNA editing in
 WT, ADAR1KO, and ADAR1-p150 HEK293T cells treated with and without interferon beta.
 
-\code{\link{pbmc_10x}}  single cell RNA sequencing data from human PBMCs from 10x Genomics
+\code{\link{pbmc_10x}} single cell RNA sequencing data from human PBMCs from 10x Genomics
 }

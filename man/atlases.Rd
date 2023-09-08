@@ -26,7 +26,7 @@ Databases of known RNA editing sites
 }
 \details{
 \code{rediportal_full_hg38()} will download the human REDIportal database for hg38 which has been
-converted into a GRanges object. The Granges is supplemented with additional columns of information
+converted into a GRanges object. The GRanges is supplemented with additional columns of information
 provided by the REDIportal database, including gene location, repeat type, dbSNP annotation, and
 potential for amino-acid recoding.
 

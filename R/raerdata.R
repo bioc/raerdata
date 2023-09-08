@@ -6,12 +6,12 @@
 #' @details
 #' [`atlases`][rediportal_full_hg38] a collection of RNA editing databases  
 #' 
-#' [`NA12878`] Whole genome and RNA sequencing from the NA12878 cell line
+#' [`NA12878`] Whole genome and RNA sequencing data from the NA12878 cell line
 #' 
-#' [`GSE99249`]  RNA sequencing data from a study that examined RNA editing in
+#' [`GSE99249`] RNA sequencing data from a study that examined RNA editing in
 #' WT, ADAR1KO, and ADAR1-p150 HEK293T cells treated with and without interferon beta.
 #' 
-#' [`pbmc_10x`]  single cell RNA sequencing data from human PBMCs from 10x Genomics
+#' [`pbmc_10x`] single cell RNA sequencing data from human PBMCs from 10x Genomics
 #' 
 #' 
 #' @docType package
@@ -26,7 +26,7 @@ NULL
 #'
 #' @details
 #' `rediportal_full_hg38()` will download the human REDIportal database for hg38 which has been
-#'  converted into a GRanges object. The Granges is supplemented with additional columns of information
+#'  converted into a GRanges object. The GRanges is supplemented with additional columns of information
 #'  provided by the REDIportal database, including gene location, repeat type, dbSNP annotation, and
 #'  potential for amino-acid recoding.
 #'
@@ -97,7 +97,7 @@ gabay_sites_hg38 <- function(){
 #' @details
 #' Will download BAM and BAM index files from whole genome and RNA sequencing of
 #' the NA12878 cell line, The data is from the first megabase of chromosome 4. Additionally 
-#' a fasta file and a database of known SNPS will be downloaded. 
+#' a fasta file and a database of known SNPs will be downloaded. 
 #' 
 #' @returns A list containing:
 #' \itemize{
