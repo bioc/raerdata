@@ -22,3 +22,7 @@ Will download BAM and BAM index files from whole genome and RNA sequencing of
 the NA12878 cell line, The data is from the first megabase of chromosome 4. Additionally
 a fasta file and a database of known SNPs will be downloaded.
 }
+\examples{
+NA12878()
+
+}

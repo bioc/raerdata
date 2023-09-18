@@ -27,3 +27,7 @@ from \href{https://www.10xgenomics.com/resources/datasets/10k-human-pbmcs-3-v3-1
 \code{pbmc_10x()} will download a BAM, BAM index file, REDIportal RNA editing sites, and
 a SingleCellExperiment object from the \link{ExperimentHub}.
 }
+\examples{
+pbmc_10x()
+
+}

@@ -24,3 +24,7 @@ WT, ADAR1KO, and ADAR1-p150 HEK293T cells treated with and without interferon be
 are wild type cells treated with interferon beta. The BAM files contain alignments
 from chromosome 18.
 }
+\examples{
+GSE99249()
+
+}

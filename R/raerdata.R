@@ -15,6 +15,7 @@
 #' 
 #' 
 #' @docType package
+#' 
 #' @importFrom ExperimentHub ExperimentHub
 #' @import Rsamtools 
 #' @rdname raerdata
@@ -44,7 +45,12 @@ NULL
 #'  `gabay_sites_hg38()` will download high-confidence human CDS editing sites (hg38).
 #'
 #'  `gabay_sites_mm10()` will download high-confidence mouse CDS editing sites (lifted-over from hg38 to mm10).
-#'
+#' 
+#' @examples
+#' gabay_sites_hg38()
+#'  
+#' @returns A [GRanges] object.
+#' 
 #' @rdname atlases
 #' @family atlases
 #' @export
@@ -105,6 +111,10 @@ gabay_sites_hg38 <- function(){
 #' \item \code{fasta} the path to a fasta file containing the first megabase of chr4
 #' \item \code{snps} a GRanges object containing snps from the first megabase of chr4
 #' }
+#' 
+#' @examples
+#' NA12878()
+#' 
 #' @rdname NA12878
 #' @import Rsamtools 
 #' @importFrom BiocGenerics path
@@ -114,7 +124,7 @@ NA12878 <- function() {
     eh <- ExperimentHub::ExperimentHub()
     
     # bam files
-    eh_ids <- c("EH8256", "EH8257", "EH8258", "EH8259")
+    eh_ids <- c( "EH8407", "EH8408", "EH8405", "EH8406")
     paths <- unlist(lapply(eh_ids, function(x) eh[[x]]))
     nms <- c("NA12878_RNASEQ", "NA12878_WGS")
     desc <- eh[eh_ids]$title
@@ -126,10 +136,10 @@ NA12878 <- function() {
     names(bams) <- nms
 
     # snps
-    snps <- eh[["EH8260"]]
+    snps <- eh[["EH8409"]]
     
     # small genome seq
-    fasta <- path(eh[["EH8261"]])
+    fasta <- path(eh[["EH8410"]])
     list(
         bams = bams,
         fasta = fasta,
@@ -155,6 +165,10 @@ NA12878 <- function() {
 #' \item \code{fasta} the path to a fasta file from chr18 of hg38
 #' \item \code{snps} a [GRanges] object containing known snps from the Rediportal database (hg38)
 #' }
+#' 
+#' @examples
+#' GSE99249()
+#' 
 #' @rdname GSE99249
 #' @import rtracklayer
 #' @export
@@ -207,6 +221,9 @@ GSE99249 <- function() {
 #' \item \code{sce} a [SingleCellExperiment] object containing gene expression data,
 #'  a UMAP projection and cell type annotations. 
 #' }
+#' @examples
+#' pbmc_10x()
+#' 
 #' @rdname pbmc_10x
 #' @import SingleCellExperiment
 #' @export

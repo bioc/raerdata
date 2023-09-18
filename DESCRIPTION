@@ -1,7 +1,12 @@
 Package: raerdata
-Title: External data sets ...
-Version: 0.99.1
-Description: References made from ...
+Title: A collection of datasets for use with raer package
+Version: 0.99.2
+Description: raerdata is an ExperimentHub package that
+  provides a collection of files useful for demostrating
+  functionality in the raer package. Datasets include 
+  10x genomics scRNA-seq, bulk RNA-seq, and pairing whole-genome
+  and RNA-seq data. Additionally 
+  databases of human and mouse RNA editing sites are provided.
 Authors@R:
     person(given = "Kent",
              family = "Riemondy",
@@ -23,6 +28,7 @@ RoxygenNote: 7.2.3
 Encoding: UTF-8
 biocViews: SingleCellData, SequencingData, RNASeqData, ExperimentHub, PackageTypeData, ExpressionData
 BugReports: https://github.com/rnabioco/raerdata/issues
+URL: https://github.com/rnabioco/raerdata
 Config/Needs/website:
     pkgdown,
     rnabioco/rbitemplate
