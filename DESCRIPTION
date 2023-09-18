@@ -29,6 +29,3 @@ Encoding: UTF-8
 biocViews: SingleCellData, SequencingData, RNASeqData, ExperimentHub, PackageTypeData, ExpressionData
 BugReports: https://github.com/rnabioco/raerdata/issues
 URL: https://github.com/rnabioco/raerdata
-Config/Needs/website:
-    pkgdown,
-    rnabioco/rbitemplate
