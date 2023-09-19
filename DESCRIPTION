@@ -4,7 +4,7 @@ Version: 0.99.2
 Description: raerdata is an ExperimentHub package that
   provides a collection of files useful for demostrating
   functionality in the raer package. Datasets include 
-  10x genomics scRNA-seq, bulk RNA-seq, and pairing whole-genome
+  10x genomics scRNA-seq, bulk RNA-seq, and paired whole-genome
   and RNA-seq data. Additionally 
   databases of human and mouse RNA editing sites are provided.
 Authors@R:

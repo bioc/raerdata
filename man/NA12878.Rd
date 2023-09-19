@@ -9,9 +9,10 @@ NA12878()
 \value{
 A list containing:
 \itemize{
-\item \code{bams} A \link{BamFileList} object, indicating the bam file paths and BAI indexes.
-\item \code{fasta} the path to a fasta file containing the first megabase of chr4
-\item \code{snps} a GRanges object containing snps from the first megabase of chr4
+\item \code{bams} A \link{BamFileList} object, indicating the BAM file paths and BAI indexes.
+\item \code{fasta} A path to a fasta file containing the genome sequence of
+the first megabase of chr4 (hg38)
+\item \code{snps} a GRanges object containing SNPs from the first megabase of chr4
 }
 }
 \description{

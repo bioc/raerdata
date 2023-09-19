@@ -107,9 +107,10 @@ gabay_sites_hg38 <- function(){
 #' 
 #' @returns A list containing:
 #' \itemize{
-#' \item \code{bams} A [BamFileList] object, indicating the bam file paths and BAI indexes. 
-#' \item \code{fasta} the path to a fasta file containing the first megabase of chr4
-#' \item \code{snps} a GRanges object containing snps from the first megabase of chr4
+#' \item \code{bams} A [BamFileList] object, indicating the BAM file paths and BAI indexes. 
+#' \item \code{fasta} A path to a fasta file containing the genome sequence of 
+#'   the first megabase of chr4 (hg38)
+#' \item \code{snps} a GRanges object containing SNPs from the first megabase of chr4
 #' }
 #' 
 #' @examples
@@ -161,9 +162,9 @@ NA12878 <- function() {
 #'
 #' @returns A list containing:
 #' \itemize{
-#' \item \code{bams} A [BamFileList] object, indicating the bam file paths and BAI indexes. 
-#' \item \code{fasta} the path to a fasta file from chr18 of hg38
-#' \item \code{snps} a [GRanges] object containing known snps from the Rediportal database (hg38)
+#' \item \code{bams} A [BamFileList] object, indicating the BAM file paths and BAI indexes. 
+#' \item \code{fasta} A path to a fasta file from chr18 of hg38
+#' \item \code{snps} a [GRanges] object containing known SNPs from the REDIportal database (hg38)
 #' }
 #' 
 #' @examples
