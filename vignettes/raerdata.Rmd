@@ -1,5 +1,5 @@
 ---
-title: "raerdata: a collection of datasets and databases for use with the raer package" 
+title: "raerdata: datasets and databases for use with the raer package" 
 author: 
   - name: Kent Riemondy
     affiliation: University of Colorado School of Medicine
@@ -19,24 +19,43 @@ vignette: >
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 ```
 
-The `raerdata` package contains datasets and databases used to illustrate functionality
-in the `raer` package.
+## Introduction
+
+The `raerdata` package contains datasets and databases used to illustrate 
+functionality to characterize RNA editing using the `raer` package. Included in 
+the package are databases of known human and mouse RNA editing sites. Datasets 
+have been preprocessed to generate smaller examples suitable for quick 
+exploration of the data and demonstration of the `raer` package. 
+
+## Installation
+
+```{r, eval = FALSE}
+if (!require("BiocManager", quietly = TRUE)) {
+    install.packages("BiocManager")
+}
+
+# The following initializes usage of Bioc devel
+BiocManager::install(version = "devel")
+
+BiocManager::install("raerdata")
+```
+
 
 ```{r}
 library(raerdata)
 ```
 
-The package contains the following resources.
-
 ## RNA editing Atlases 
 
-Atlases of known RNA editing sites formatted into `GRanges` objects. 
+Atlases of known human and mouse A-to-I RNA editing sites formatted into 
+`GRanges` objects are provided. 
 
 ### REDIportal 
 
-The `REDIportal` is a collection of RNA editing sites identified from multiple studies
-in multiple species (@Picardi2017-gn). The human (`hg38`) and mouse (`mm10`) collections are provided in 
-GRanges objects, in either coordinate only format, or with additional metadata. 
+The `REDIportal` is a collection of RNA editing sites identified from multiple 
+studies in multiple species (@Picardi2017-gn). The human (`hg38`) and 
+mouse (`mm10`) collections are provided in GRanges objects, in either 
+coordinate only format, or with additional metadata. 
 
 ```{r}
 rediportal_coords_hg38()
@@ -44,8 +63,9 @@ rediportal_coords_hg38()
 
 ### CDS recoding sites 
 
-Human `CDS` recoding RNA editing sites identified by @Gabay2022-gw were formatted into
-`GRanges` objects. These sites were also lifted over to the mouse genome (`mm10`).
+Human `CDS` recoding RNA editing sites identified by @Gabay2022-gw were 
+formatted into `GRanges` objects. These sites were also lifted over to the 
+mouse genome (`mm10`).
 
 ```{R}
 cds_sites <- gabay_sites_hg38()
@@ -56,8 +76,8 @@ cds_sites[1:4, 1:4]
 
 ### Whole genome and RNA sequencing data from NA12878 cell line
 
-WGS and RNA-seq BAM and associated files generated from a subset of chromosome 4.
-Paths to files and related data objects are returned in a list. 
+WGS and RNA-seq BAM and associated files generated from a subset of 
+chromosome 4. Paths to files and related data objects are returned in a list. 
 
 ```{r}
 NA12878()
@@ -65,7 +85,8 @@ NA12878()
 
 ### GSE99249: RNA-Seq of Interferon beta treatment of ADAR1KO cell line
 
-RNA-seq BAM files from ADAR1KO and Wild-Type HEK293 cells and associated reference files from chromosome 18 (@Chung2018-gh).
+RNA-seq BAM files from ADAR1KO and Wild-Type HEK293 cells and associated 
+reference files from chromosome 18 (@Chung2018-gh).
 
 ```{r}
 GSE99249()
@@ -74,7 +95,10 @@ GSE99249()
 
 ### 10x Genomics 10k PBMC scRNA-seq
 
-10x Genomics BAM file and RNA editing sites from chromosome 16 of human PBMC scRNA-seq library. Also included is a SingleCellExperiment object containing gene expression values, cluster annotations, cell-type annotations, and a UMAP projection.
+10x Genomics BAM file and RNA editing sites from chromosome 16 of human PBMC 
+scRNA-seq library. Also included is a SingleCellExperiment object containing 
+gene expression values, cluster annotations, cell-type annotations, and a UMAP 
+projection.
 
 ```{r}
 pbmc_10x()
@@ -88,9 +112,11 @@ Alternatively individual files can be accessed from the ExperimentHub directly
 library(ExperimentHub)
 eh <- ExperimentHub()
 raerdata_files <- query(eh, "raerdata")
-data.frame(id = raerdata_files$ah_id,
-           title = raerdata_files$title,
-           description = raerdata_files$description)
+data.frame(
+    id = raerdata_files$ah_id,
+    title = raerdata_files$title,
+    description = raerdata_files$description
+)
 ```
 
 <details style="margin-bottom:10px;">

@@ -9,20 +9,24 @@ GSE99249()
 \value{
 A list containing:
 \itemize{
-\item \code{bams} A \link{BamFileList} object, indicating the bam file paths and BAI indexes.
-\item \code{fasta} the path to a fasta file from chr18 of hg38
-\item \code{snps} a \link{GRanges} object containing known snps from the Rediportal database (hg38)
+\item \code{bams} A \link{BamFileList} object, indicating the BAM file paths and
+BAI indexes.
+\item \code{fasta} A path to a fasta file from chr18 of hg38
+\item \code{snps} a GRanges object containing known SNPs from the REDIportal
+database (hg38)
 }
 }
 \description{
-Study \href{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99249}{GSE99249} examined RNA editing in
-WT, ADAR1KO, and ADAR1-p150 HEK293T cells treated with and without interferon beta.
+Study
+\href{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99249}{GSE99249}
+examined RNA editing in WT, ADAR1KO, and ADAR1-p150 HEK293T cells treated
+with and without interferon beta.
 }
 \details{
-\code{GSE99249()} will download BAM and BAM index files from 6 RNA-seq libraries.
-3 libraries are ADAR1 knockout cells treated with interferon beta. and 3 libraries
-are wild type cells treated with interferon beta. The BAM files contain alignments
-from chromosome 18.
+\code{GSE99249()} will download BAM and BAM index files from 6 RNA-seq
+libraries. 3 libraries are ADAR1 knockout cells treated with interferon
+beta and 3 libraries are wild type cells treated with interferon beta.
+The BAM files contain alignments from chromosome 18.
 }
 \examples{
 GSE99249()

@@ -9,10 +9,12 @@ NA12878()
 \value{
 A list containing:
 \itemize{
-\item \code{bams} A \link{BamFileList} object, indicating the BAM file paths and BAI indexes.
+\item \code{bams} A \link{BamFileList} object, indicating the BAM file paths and
+BAI indexes.
 \item \code{fasta} A path to a fasta file containing the genome sequence of
 the first megabase of chr4 (hg38)
-\item \code{snps} a GRanges object containing SNPs from the first megabase of chr4
+\item \code{snps} a GRanges object containing SNPs from the first megabase
+of chr4
 }
 }
 \description{
@@ -20,8 +22,8 @@ Whole genome and RNA sequencing data from NA12878 cell line
 }
 \details{
 Will download BAM and BAM index files from whole genome and RNA sequencing of
-the NA12878 cell line, The data is from the first megabase of chromosome 4. Additionally
-a fasta file and a database of known SNPs will be downloaded.
+the NA12878 cell line, The data is from the first megabase of chromosome 4.
+Additionally a fasta file and a database of known SNPs will be downloaded.
 }
 \examples{
 NA12878()

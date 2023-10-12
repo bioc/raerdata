@@ -11,23 +11,26 @@ A list containing:
 \itemize{
 \item \code{bam} a \link{BamFile} object indicating the BAM and BAI file paths.
 Contains alignments from only chr16 (hg38).
-\item \code{sites} a \link{GRanges} object containing known RNA editing sites from
+\item \code{sites} a GRanges object containing known RNA editing sites from
 the REDIportal database (hg38).
-\item \code{sce} a \link{SingleCellExperiment} object containing gene expression data,
-a UMAP projection and cell type annotations.
+\item \code{sce} a \link{SingleCellExperiment} object containing gene expression
+data, a UMAP projection and cell type annotations.
 }
 }
 \description{
-A 10x Genomics 3' single cell RNA-seq library from 10k PBMCs. The BAM file contains
-alignments from chr16. A \link{SingleCellExperiment} is also provided with pre-processed
-gene expression data, a UMAP projection and cell type annotations. The dataset was obtained
-from \href{https://www.10xgenomics.com/resources/datasets/10k-human-pbmcs-3-v3-1-chromium-x-with-intronic-reads-3-1-high}{10x Genomics}
+A 10x Genomics 3' single cell RNA-seq library from 10k PBMCs. The BAM file
+contains alignments from chr16. A \link{SingleCellExperiment} is also provided
+with pre-processed gene expression data, a UMAP projection and cell type
+annotations.
 }
 \details{
-\code{pbmc_10x()} will download a BAM, BAM index file, REDIportal RNA editing sites, and
-a SingleCellExperiment object from the \link{ExperimentHub}.
+\code{pbmc_10x()} will download a BAM, BAM index file, REDIportal RNA editing
+sites, and a SingleCellExperiment object from the \link{ExperimentHub}.
 }
 \examples{
 pbmc_10x()
 
+}
+\seealso{
+\url{https://www.10xgenomics.com/resources/datasets/10k-human-pbmcs-3-v3-1-chromium-x-with-intronic-reads-3-1-high}
 }

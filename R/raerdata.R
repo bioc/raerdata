@@ -1,23 +1,29 @@
 #' raerdata
 #'
-#' @description A collection of datasets and databases to demonstrate RNA-editing 
-#' analysis approaches using the raer package.
-#' 
+#' @description A collection of datasets and databases to demonstrate 
+#' RNA-editing analysis approaches using the raer package.
+#'
 #' @details
-#' [`atlases`][rediportal_full_hg38] a collection of RNA editing databases  
-#' 
-#' [`NA12878`] Whole genome and RNA sequencing data from the NA12878 cell line
-#' 
-#' [`GSE99249`] RNA sequencing data from a study that examined RNA editing in
-#' WT, ADAR1KO, and ADAR1-p150 HEK293T cells treated with and without interferon beta.
-#' 
-#' [`pbmc_10x`] single cell RNA sequencing data from human PBMCs from 10x Genomics
-#' 
-#' 
+#' [`atlases`][rediportal_full_hg38] 
+#' a collection of RNA editing databases
+#'
+#' [`NA12878`] 
+#' Whole genome and RNA sequencing data from the NA12878 cell line
+#'
+#' [`GSE99249`] 
+#' RNA sequencing data from a study that examined RNA editing in
+#' WT, ADAR1KO, and ADAR1-p150 HEK293T cells treated with and without
+#' interferon beta.
+#'
+#' [`pbmc_10x`] single cell RNA sequencing data from human PBMCs from 
+#' 10x Genomics
+#'
+#'
 #' @docType package
-#' 
+#'
 #' @importFrom ExperimentHub ExperimentHub
-#' @import Rsamtools 
+#' @importFrom SingleCellExperiment SingleCellExperiment
+#' @importFrom rtracklayer import
 #' @rdname raerdata
 #' @name raerdata
 NULL
@@ -26,35 +32,41 @@ NULL
 #'
 #'
 #' @details
-#' `rediportal_full_hg38()` will download the human REDIportal database for hg38 which has been
-#'  converted into a GRanges object. The GRanges is supplemented with additional columns of information
-#'  provided by the REDIportal database, including gene location, repeat type, dbSNP annotation, and
-#'  potential for amino-acid recoding.
+#' `rediportal_full_hg38()` will download the human REDIportal database for 
+#'  hg38 which has been converted into a GRanges object. The GRanges is
+#'  supplemented with additional columns of information provided by the 
+#'  REDIportal database,  including gene location, repeat type, dbSNP 
+#'  annotation, and potential for amino-acid recoding.
 #'
-#' `rediportal_coords_hg38()` will download the human REDIportal database for hg38 which has been
-#'  converted into a GRanges object, which only contains the coordinates of the editing site.
+#' `rediportal_coords_hg38()` will download the human REDIportal database for 
+#'  hg38 which has been converted into a GRanges object, which only 
+#'  contains the coordinates of the editing site.
 #'
-#' `rediportal_full_mm10()` will download the mouse REDIportal database for mm10 which has been
-#'  converted into a GRanges object. The Granges is supplemented with additional columns of information
-#'  provided by the REDIportal database, including gene location, repeat type, dbSNP annotation, and
-#'  potential for amino-acid recoding.
+#' `rediportal_full_mm10()` will download the mouse REDIportal database for 
+#'  mm10 which has been converted into a GRanges object. The GRanges is 
+#'  supplemented  with additional columns of information provided by the 
+#'  REDIportal database,  including gene location, repeat type, dbSNP 
+#'  annotation, and potential for amino-acid recoding.
 #'
-#' `rediportal_coords_mm10()`will download the mouse REDIportal database for mm10 which has been
-#'  converted into a GRanges object, which only contains the coordinates of the editing site.
+#' `rediportal_coords_mm10()`will download the mouse REDIportal database for 
+#'  mm10 which has been converted into a GRanges object, which only contains
+#'  the coordinates of the editing site.
 #'
-#'  `gabay_sites_hg38()` will download high-confidence human CDS editing sites (hg38).
+#'  `gabay_sites_hg38()` will download high-confidence human CDS editing sites 
+#'  (hg38).
 #'
-#'  `gabay_sites_mm10()` will download high-confidence mouse CDS editing sites (lifted-over from hg38 to mm10).
-#' 
+#'  `gabay_sites_mm10()` will download high-confidence mouse CDS editing sites 
+#'  (lifted-over from hg38 to mm10).
+#'
 #' @examples
 #' gabay_sites_hg38()
-#'  
-#' @returns A [GRanges] object.
-#' 
+#'
+#' @returns A GRanges object.
+#'
 #' @rdname atlases
 #' @family atlases
 #' @export
-rediportal_full_mm10 <- function(){
+rediportal_full_mm10 <- function() {
     eh <- ExperimentHub()
     eh[["EH8233"]]
 }
@@ -62,7 +74,7 @@ rediportal_full_mm10 <- function(){
 #' @rdname atlases
 #' @family atlases
 #' @export
-rediportal_coords_mm10 <- function(){
+rediportal_coords_mm10 <- function() {
     eh <- ExperimentHub()
     eh[["EH8234"]]
 }
@@ -70,7 +82,7 @@ rediportal_coords_mm10 <- function(){
 #' @rdname atlases
 #' @family atlases
 #' @export
-rediportal_full_hg38 <- function(){
+rediportal_full_hg38 <- function() {
     eh <- ExperimentHub()
     eh[["EH8235"]]
 }
@@ -78,21 +90,21 @@ rediportal_full_hg38 <- function(){
 #' @rdname atlases
 #' @family atlases
 #' @export
-rediportal_coords_hg38 <- function(){
+rediportal_coords_hg38 <- function() {
     eh <- ExperimentHub()
     eh[["EH8236"]]
 }
 
 #' @rdname atlases
 #' @export
-gabay_sites_mm10 <- function(){
+gabay_sites_mm10 <- function() {
     eh <- ExperimentHub()
     eh[["EH8237"]]
 }
 
 #' @rdname atlases
 #' @export
-gabay_sites_hg38 <- function(){
+gabay_sites_hg38 <- function() {
     eh <- ExperimentHub()
     eh[["EH8238"]]
 }
@@ -102,30 +114,32 @@ gabay_sites_hg38 <- function(){
 #'
 #' @details
 #' Will download BAM and BAM index files from whole genome and RNA sequencing of
-#' the NA12878 cell line, The data is from the first megabase of chromosome 4. Additionally 
-#' a fasta file and a database of known SNPs will be downloaded. 
-#' 
+#' the NA12878 cell line, The data is from the first megabase of chromosome 4. 
+#' Additionally a fasta file and a database of known SNPs will be downloaded.
+#'
 #' @returns A list containing:
 #' \itemize{
-#' \item \code{bams} A [BamFileList] object, indicating the BAM file paths and BAI indexes. 
-#' \item \code{fasta} A path to a fasta file containing the genome sequence of 
+#' \item \code{bams} A [BamFileList] object, indicating the BAM file paths and 
+#'   BAI indexes.
+#' \item \code{fasta} A path to a fasta file containing the genome sequence of
 #'   the first megabase of chr4 (hg38)
-#' \item \code{snps} a GRanges object containing SNPs from the first megabase of chr4
+#' \item \code{snps} a GRanges object containing SNPs from the first megabase 
+#'   of chr4
 #' }
-#' 
+#'
 #' @examples
 #' NA12878()
-#' 
+#'
 #' @rdname NA12878
-#' @import Rsamtools 
+#' @importFrom Rsamtools BamFileList
 #' @importFrom BiocGenerics path
-#' @import GenomicRanges
+
 #' @export
 NA12878 <- function() {
     eh <- ExperimentHub::ExperimentHub()
-    
+
     # bam files
-    eh_ids <- c( "EH8407", "EH8408", "EH8405", "EH8406")
+    eh_ids <- c("EH8407", "EH8408", "EH8405", "EH8406")
     paths <- unlist(lapply(eh_ids, function(x) eh[[x]]))
     nms <- c("NA12878_RNASEQ", "NA12878_WGS")
     desc <- eh[eh_ids]$title
@@ -133,12 +147,12 @@ NA12878 <- function() {
     desc <- desc[is_bam]
     bams <- paths[is_bam]
     idxs <- paths[!is_bam]
-    bams <- BamFileList(bams, idxs)
+    bams <- Rsamtools::BamFileList(bams, idxs)
     names(bams) <- nms
 
     # snps
     snps <- eh[["EH8409"]]
-    
+
     # small genome seq
     fasta <- path(eh[["EH8410"]])
     list(
@@ -151,31 +165,34 @@ NA12878 <- function() {
 #' RNA sequencing data from study GSE99249
 #'
 #' @description
-#' Study [GSE99249](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99249) examined RNA editing in
-#' WT, ADAR1KO, and ADAR1-p150 HEK293T cells treated with and without interferon beta.
+#' Study 
+#' [GSE99249](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE99249)
+#' examined RNA editing in WT, ADAR1KO, and ADAR1-p150 HEK293T cells treated 
+#' with and without interferon beta.
 #'
 #' @details
-#' `GSE99249()` will download BAM and BAM index files from 6 RNA-seq libraries. 
-#' 3 libraries are ADAR1 knockout cells treated with interferon beta. and 3 libraries
-#' are wild type cells treated with interferon beta. The BAM files contain alignments
-#' from chromosome 18. 
+#' `GSE99249()` will download BAM and BAM index files from 6 RNA-seq 
+#' libraries. 3 libraries are ADAR1 knockout cells treated with interferon 
+#' beta and 3 libraries are wild type cells treated with interferon beta. 
+#' The BAM files contain alignments from chromosome 18.
 #'
 #' @returns A list containing:
 #' \itemize{
-#' \item \code{bams} A [BamFileList] object, indicating the BAM file paths and BAI indexes. 
+#' \item \code{bams} A [BamFileList] object, indicating the BAM file paths and 
+#'   BAI indexes.
 #' \item \code{fasta} A path to a fasta file from chr18 of hg38
-#' \item \code{snps} a [GRanges] object containing known SNPs from the REDIportal database (hg38)
+#' \item \code{snps} a GRanges object containing known SNPs from the REDIportal 
+#'   database (hg38)
 #' }
-#' 
+#'
 #' @examples
 #' GSE99249()
-#' 
+#'
 #' @rdname GSE99249
-#' @import rtracklayer
 #' @export
 GSE99249 <- function() {
     eh <- ExperimentHub::ExperimentHub()
-    
+
     # get bam files
     eh_ids <- paste0("EH", 8239:8250)
     paths <- unlist(lapply(eh_ids, function(x) eh[[x]]))
@@ -186,12 +203,12 @@ GSE99249 <- function() {
     bams <- paths[is_bam]
     idxs <- paths[!is_bam]
     bams <- BamFileList(bams, idxs)
-    
+
     names(bams) <- sub("_chr18.bam", "", desc)
-    
+
     # rediportal sites
     sites <- eh[["EH8236"]]
-    
+
     # small genome seq
     fasta <- path(eh[["EH8251"]])
     list(
@@ -204,39 +221,42 @@ GSE99249 <- function() {
 #' single cell RNA sequencing data from human PBMCs
 #'
 #' @description
-#' A 10x Genomics 3' single cell RNA-seq library from 10k PBMCs. The BAM file contains
-#' alignments from chr16. A [SingleCellExperiment] is also provided with pre-processed
-#' gene expression data, a UMAP projection and cell type annotations. The dataset was obtained
-#' from [10x Genomics](https://www.10xgenomics.com/resources/datasets/10k-human-pbmcs-3-v3-1-chromium-x-with-intronic-reads-3-1-high)
+#' A 10x Genomics 3' single cell RNA-seq library from 10k PBMCs. The BAM file 
+#' contains alignments from chr16. A [SingleCellExperiment] is also provided 
+#' with pre-processed gene expression data, a UMAP projection and cell type 
+#' annotations. 
 #'
 #' @details
-#' `pbmc_10x()` will download a BAM, BAM index file, REDIportal RNA editing sites, and 
-#' a SingleCellExperiment object from the [ExperimentHub]. 
+#' `pbmc_10x()` will download a BAM, BAM index file, REDIportal RNA editing 
+#' sites, and a SingleCellExperiment object from the [ExperimentHub].
 #'
 #' @returns A list containing:
 #' \itemize{
-#' \item \code{bam} a [BamFile] object indicating the BAM and BAI file paths. 
+#' \item \code{bam} a [BamFile] object indicating the BAM and BAI file paths.
 #' Contains alignments from only chr16 (hg38).
-#' \item \code{sites} a [GRanges] object containing known RNA editing sites from 
+#' \item \code{sites} a GRanges object containing known RNA editing sites from
 #' the REDIportal database (hg38).
-#' \item \code{sce} a [SingleCellExperiment] object containing gene expression data,
-#'  a UMAP projection and cell type annotations. 
+#' \item \code{sce} a [SingleCellExperiment] object containing gene expression 
+#' data, a UMAP projection and cell type annotations.
 #' }
 #' @examples
 #' pbmc_10x()
 #' 
+#' @seealso 
+#'   \url{https://www.10xgenomics.com/resources/datasets/10k-human-pbmcs-3-v3-1-chromium-x-with-intronic-reads-3-1-high}
 #' @rdname pbmc_10x
-#' @import SingleCellExperiment
+#' @importFrom Rsamtools BamFile
 #' @export
-pbmc_10x <- function(){
+pbmc_10x <- function() {
     eh <- ExperimentHub::ExperimentHub()
     bam <- unname(eh[["EH8252"]])
     bai <- eh[["EH8253"]]
-    
+
     sites <- eh[["EH8236"]]
     sce <- eh[["EH8254"]]
-    list(bam = BamFile(bam, bai),
-         sites = sites,
-         sce = sce)
+    list(
+        bam = Rsamtools::BamFile(bam, bai),
+        sites = sites,
+        sce = sce
+    )
 }
-

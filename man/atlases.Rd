@@ -22,34 +22,40 @@ gabay_sites_mm10()
 gabay_sites_hg38()
 }
 \value{
-A \link{GRanges} object.
+A GRanges object.
 }
 \description{
 Databases of known RNA editing sites
 }
 \details{
-\code{rediportal_full_hg38()} will download the human REDIportal database for hg38 which has been
-converted into a GRanges object. The GRanges is supplemented with additional columns of information
-provided by the REDIportal database, including gene location, repeat type, dbSNP annotation, and
-potential for amino-acid recoding.
+\code{rediportal_full_hg38()} will download the human REDIportal database for
+hg38 which has been converted into a GRanges object. The GRanges is
+supplemented with additional columns of information provided by the
+REDIportal database,  including gene location, repeat type, dbSNP
+annotation, and potential for amino-acid recoding.
 
-\code{rediportal_coords_hg38()} will download the human REDIportal database for hg38 which has been
-converted into a GRanges object, which only contains the coordinates of the editing site.
+\code{rediportal_coords_hg38()} will download the human REDIportal database for
+hg38 which has been converted into a GRanges object, which only
+contains the coordinates of the editing site.
 
-\code{rediportal_full_mm10()} will download the mouse REDIportal database for mm10 which has been
-converted into a GRanges object. The Granges is supplemented with additional columns of information
-provided by the REDIportal database, including gene location, repeat type, dbSNP annotation, and
-potential for amino-acid recoding.
+\code{rediportal_full_mm10()} will download the mouse REDIportal database for
+mm10 which has been converted into a GRanges object. The GRanges is
+supplemented  with additional columns of information provided by the
+REDIportal database,  including gene location, repeat type, dbSNP
+annotation, and potential for amino-acid recoding.
 
-\code{rediportal_coords_mm10()}will download the mouse REDIportal database for mm10 which has been
-converted into a GRanges object, which only contains the coordinates of the editing site.
+\code{rediportal_coords_mm10()}will download the mouse REDIportal database for
+mm10 which has been converted into a GRanges object, which only contains the
+coordinates of the editing site.
 
-\code{gabay_sites_hg38()} will download high-confidence human CDS editing sites (hg38).
+\code{gabay_sites_hg38()} will download high-confidence human CDS editing sites
+(hg38).
 
-\code{gabay_sites_mm10()} will download high-confidence mouse CDS editing sites (lifted-over from hg38 to mm10).
+\code{gabay_sites_mm10()} will download high-confidence mouse CDS editing sites
+(lifted-over from hg38 to mm10).
 }
 \examples{
 gabay_sites_hg38()
- 
+
 }
 \concept{atlases}

@@ -1,6 +1,6 @@
 Package: raerdata
 Title: A collection of datasets for use with raer package
-Version: 0.99.2
+Version: 0.99.3
 Description: raerdata is an ExperimentHub package that
   provides a collection of files useful for demostrating
   functionality in the raer package. Datasets include 
@@ -15,13 +15,16 @@ Authors@R:
              email = "kent.riemondy@cuanschutz.edu")
 License: MIT + file LICENSE
 Imports: 
-  ExperimentHub, 
-  Rsamtools, 
-  SingleCellExperiment, 
-  rtracklayer, 
-  GenomicRanges,
-  BiocGenerics
-Suggests: rmarkdown, knitr, BiocStyle
+    ExperimentHub, 
+    Rsamtools, 
+    BiocGenerics,
+    rtracklayer,
+    SingleCellExperiment
+Suggests: 
+    rmarkdown,
+    knitr,
+    BiocStyle,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
@@ -29,3 +32,4 @@ Encoding: UTF-8
 biocViews: SingleCellData, SequencingData, RNASeqData, ExperimentHub, PackageTypeData, ExpressionData
 BugReports: https://github.com/rnabioco/raerdata/issues
 URL: https://github.com/rnabioco/raerdata
+Config/testthat/edition: 3
