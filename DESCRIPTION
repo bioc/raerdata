@@ -1,6 +1,6 @@
 Package: raerdata
 Title: A collection of datasets for use with raer package
-Version: 1.1.0
+Version: 1.2.0
 Description: raerdata is an ExperimentHub package that
   provides a collection of files useful for demostrating
   functionality in the raer package. Datasets include 
